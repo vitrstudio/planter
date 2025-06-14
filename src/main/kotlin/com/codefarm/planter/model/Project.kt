@@ -1,11 +1,9 @@
 package com.codefarm.planter.model
 
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Version
+import jakarta.persistence.*
 import java.util.*
 
+@Entity
 data class Project(
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         @Version val version: Int? = null,
