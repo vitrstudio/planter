@@ -5,5 +5,4 @@ import com.codefarm.planter.model.ProjectType
 class ProjectRequest(
     val name: String,
     val type: ProjectType,
-    val githubRepositoryId: Long,
 )

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class ProjectAdapter {
-    fun toProject(request: ProjectRequest, user: User) = Project(
+    fun toProject(request: ProjectRequest, user: User, githubRepositoryId: Long) = Project(
         name = request.name,
         type = request.type,
-        githubRepositoryId = request.githubRepositoryId,
+        githubRepositoryId = githubRepositoryId,
         user = user
     )
 

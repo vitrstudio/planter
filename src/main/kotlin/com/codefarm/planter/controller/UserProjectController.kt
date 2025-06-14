@@ -28,8 +28,7 @@ class UserProjectController(
         @RequestBody request: ProjectRequest,
     ): ProjectResponse {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
-        return projectAdapter.toProject(request, user)
-            .let { projectService.create(it) }
+        return projectService.create(user, request)
             .let { projectAdapter.toProjectResponse(it) }
     }
 
