@@ -4,6 +4,7 @@ import com.codefarm.planter.integrations.GithubClient
 import com.codefarm.planter.model.Project
 import com.codefarm.planter.repository.ProjectRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ProjectService(
@@ -13,7 +14,11 @@ class ProjectService(
     
     fun getAll(): List<Project> = projectRepository.findAll()
 
+    fun getByUserId(userId: UUID) = projectRepository.findByUserId(userId)
+
     fun create(project: Project) = project
         .let { githubClient.createRepository(project) }
         .let { projectRepository.save(it) }
-} 
+
+    fun delete(id: UUID) = projectRepository.deleteById(id)
+}
