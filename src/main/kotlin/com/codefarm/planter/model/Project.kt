@@ -1,5 +1,6 @@
 package com.codefarm.planter.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import java.util.*
 
@@ -15,5 +16,6 @@ data class Project(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id", nullable = false)
+        @JsonManagedReference
         val user: User,
 )

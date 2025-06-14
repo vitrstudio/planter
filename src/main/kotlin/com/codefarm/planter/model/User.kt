@@ -1,5 +1,6 @@
 package com.codefarm.planter.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType.ALL
 import jakarta.persistence.FetchType.LAZY
@@ -18,5 +19,6 @@ data class User(
         cascade = [ALL],
         orphanRemoval = true
     )
+    @JsonBackReference
     val projects: List<Project> = emptyList(),
 )
