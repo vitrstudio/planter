@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType.LAZY
 import java.util.*
 
 @Entity
+@Table(name = "users")
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
     val githubUserId: Long,

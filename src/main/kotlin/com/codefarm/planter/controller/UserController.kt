@@ -14,6 +14,11 @@ class UserController(
     private val userService: UserService,
     private val userAdapter: UserAdapter,
 ) {
+
+    @GetMapping
+    fun getUsers() = userService.getAll()
+        .map { userAdapter.toUserResponse(it) }
+
     @GetMapping("/{userId}")
     fun getUser(@PathVariable userId: UUID) = userService.get(userId)
         ?.let { userAdapter.toUserResponse(it) }

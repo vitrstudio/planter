@@ -8,6 +8,8 @@ import java.util.*
 @Service
 class UserService(val userRepository: UserRepository) {
 
+    fun getAll(): List<User> = userRepository.findAll()
+
     fun get(id: UUID): User? = userRepository
         .findById(id)
         .orElse(null)

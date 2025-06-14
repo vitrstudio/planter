@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import java.util.*
 
 @Entity
+@Table(name = "projects")
 data class Project(
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         @Version val version: Int? = null,
