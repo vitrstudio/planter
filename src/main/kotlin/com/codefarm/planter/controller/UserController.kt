@@ -28,4 +28,7 @@ class UserController(
     fun createUser(@RequestBody request: UserRequest) = userAdapter
         .toUser(request)
         .let { userService.create(it) }
+
+    @DeleteMapping("/{userId}")
+    fun deleteUser(@PathVariable userId: UUID) = userService.delete(userId)
 }
