@@ -23,3 +23,9 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "user_data" {
+  description = "Startup script to run on ec2 instance"
+  type        = string
+  default     = ""
+}
