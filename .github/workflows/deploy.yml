@@ -8,12 +8,12 @@ jobs:
   deploy:
     name: Build and Deploy to EC2
     runs-on: ubuntu-latest
+
     env:
-      JAR_PATH: "build/libs/*.jar"
-      EC2_PUBLIC_IP: "44.208.31.250"
-      S3_BUCKET: "planter-app-a9191e2a"
-      CLOUDFRONT_URL: "d31geucmsqpd7p.cloudfront.net"
-      RDS_ENDPOINT: "planter-rds-a9191e2a.c4jwu00cswxc.us-east-1.rds.amazonaws.com:5432"
+      EC2_PUBLIC_IP: 44.208.31.250
+      S3_BUCKET: planter-app-a9191e2a
+      CLOUDFRONT_URL: d31geucmsqpd7p.cloudfront.net
+      RDS_ENDPOINT: planter-rds-a9191e2a.c4jwu00cswxc.us-east-1.rds.amazonaws.com:5432
 
     steps:
       - name: Checkout code
@@ -31,6 +31,12 @@ jobs:
       - name: Build JAR with Gradle
         run: ./gradlew clean build -x test
 
+      - name: Verify built artifacts exist
+        run: |
+          test -f Dockerfile
+          test -f scripts/start-app.sh
+          ls -l build/libs/*.jar
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -41,11 +47,11 @@ jobs:
       - name: Copy JAR, Dockerfile, and start script to EC2
         uses: appleboy/scp-action@master
         with:
-          host: "${{ env.EC2_PUBLIC_IP }}"
+          host: ${{ env.EC2_PUBLIC_IP }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           source: |
-            "${{ env.JAR_PATH }}"
+            build/libs/*.jar
             Dockerfile
             scripts/start-app.sh
           target: "~/app"
@@ -53,13 +59,13 @@ jobs:
       - name: SSH and start Spring app on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: "${{ env.EC2_PUBLIC_IP }}"
+          host: ${{ env.EC2_PUBLIC_IP }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             export DB_URL="jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb"
-            export DB_USERNAME="planteradmin"
+            export DB_USERNAME=planteradmin
             export PLANTER_DB_PASSWORD="${{ secrets.PLANTER_DB_PASSWORD }}"
-            export PROJECT_NAME="planter"
+            export PROJECT_NAME=planter
             chmod +x ~/app/start-app.sh
             ~/app/start-app.sh
