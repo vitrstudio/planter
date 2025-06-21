@@ -1,18 +1,22 @@
 #!/bin/bash
-
 set -e
 
-cd ~/app
-
-# Start Docker if not already running
-sudo service docker start
+APP_DIR=~/app
+cd "$APP_DIR"
 
 # Stop and remove any existing container
-docker stop spring-app || true
-docker rm spring-app || true
+docker stop planter-app || true
+docker rm planter-app || true
 
-# Build the Docker image
-docker build -t spring-app .
+# Build Docker image
+docker build -t planter-app .
 
-# Run the container on port 80 → 8080
-docker run -d --name spring-app -p 80:8080 spring-app
+# Run Docker container with environment variables
+docker run -d \
+  --name planter-app \
+  -p 80:8080 \
+  -e DB_URL="$DB_URL" \
+  -e DB_USERNAME="$DB_USERNAME" \
+  -e PLANTER_DB_PASSWORD="$PLANTER_DB_PASSWORD" \
+  -e PROJECT_NAME="$PROJECT_NAME" \
+  planter-app
