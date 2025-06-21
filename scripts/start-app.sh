@@ -14,9 +14,9 @@ docker build -t planter-app .
 # Run Docker container with environment variables
 docker run -d \
   --name planter-app \
-  -p 80:8080 \
   -e DB_URL="$DB_URL" \
   -e DB_USERNAME="$DB_USERNAME" \
   -e PLANTER_DB_PASSWORD="$PLANTER_DB_PASSWORD" \
   -e PROJECT_NAME="$PROJECT_NAME" \
+  -p 80:8080 \
   planter-app
