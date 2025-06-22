@@ -98,7 +98,7 @@ jobs:
           script: |
             export DB_URL="jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb"
             export DB_USERNAME=planteradmin
-            export PLANTER_DB_PASSWORD="${{ secrets.PLANTER_DB_PASSWORD }}"
+            export DB_PASSWORD="${{ secrets.PLANTER_DB_PASSWORD }}"
             export PROJECT_NAME=planter
             chmod +x ~/app/scripts/start-app.sh
             ~/app/scripts/start-app.sh

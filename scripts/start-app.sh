@@ -16,7 +16,7 @@ docker run -d \
   --name planter-app \
   -e DB_URL="$DB_URL" \
   -e DB_USERNAME="$DB_USERNAME" \
-  -e PLANTER_DB_PASSWORD="$PLANTER_DB_PASSWORD" \
+  -e DB_PASSWORD="$DB_PASSWORD" \
   -e PROJECT_NAME="$PROJECT_NAME" \
   -p 80:8080 \
   planter-app

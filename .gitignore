@@ -38,4 +38,5 @@ out/
 
 ### Kotlin ###
 .kotlin
-.env
+.env.local
+.env.prod

@@ -1,13 +1,13 @@
 services:
   postgres:
     env_file:
-      - .env
+      - .env.local
     image: postgres:latest
     container_name: local-${PROJECT_NAME}-postgres
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${PLANTER_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
