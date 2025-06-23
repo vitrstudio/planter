@@ -72,6 +72,17 @@ jobs:
           source: "${{ env.JAR_FILE }},Dockerfile,scripts/start-app.sh"
           target: "~/app"
 
+      - name: Bootstrap Nginx with project domain
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_PUBLIC_IP }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            export LETSENCRYPT_EMAIL=codeacademyx@gmail.com
+            cd ~/nginx-proxy
+            ./bootstrap.sh farmify.app
+
       - name: SSH and start Spring app on EC2
         uses: appleboy/ssh-action@master
         with:
