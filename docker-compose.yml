@@ -1,7 +1,7 @@
 services:
   postgres:
     env_file:
-      - .env.local
+      - .env
     image: postgres:latest
     container_name: local-${PROJECT_NAME}-postgres
     environment:

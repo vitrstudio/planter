@@ -20,5 +20,5 @@ data class User(
         orphanRemoval = true
     )
     @JsonBackReference
-    val projects: List<Project> = emptyList(),
+    val projects: MutableList<Project> = mutableListOf()
 )

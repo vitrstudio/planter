@@ -17,5 +17,5 @@ data class Project(
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id", nullable = false)
         @JsonManagedReference
-        val user: User,
+        var user: User
 )
