@@ -81,13 +81,3 @@ jobs:
             export PROJECT_NAME=planter
             chmod +x ~/app/scripts/start-app.sh
             ~/app/scripts/start-app.sh
-
-      - name: Bootstrap Nginx with project domain
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_PUBLIC_IP }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd ~/nginx-proxy
-            ./bootstrap.sh farmify.app codeacademyx@gmail.com
