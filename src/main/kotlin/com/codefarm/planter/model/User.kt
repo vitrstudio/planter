@@ -10,6 +10,7 @@ import java.util.*
 @Table(name = "users")
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
+    @Version val version: Int? = null,
     val githubUserId: Long,
     val createdAt: Long = System.currentTimeMillis(),
 
