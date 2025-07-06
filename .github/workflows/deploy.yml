@@ -38,18 +38,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Retrieve EC2 IP and RDS Endpoint from Secrets Manager
+      - name: Retrieve EC2 instance ID and RDS Endpoint from Secrets Manager
         id: fetch_secrets
         run: |
-          export EC2_PUBLIC_IP=$(aws secretsmanager get-secret-value \
-            --secret-id planter/ec2_public_ip \
+          export EC2_INSTANCE_ID=$(aws secretsmanager get-secret-value \
+            --secret-id planter/ec2_instance_id \
             --query SecretString --output text)
 
           export RDS_ENDPOINT=$(aws secretsmanager get-secret-value \
             --secret-id planter/rds_endpoint \
             --query SecretString --output text)
 
-          echo "EC2_PUBLIC_IP=$EC2_PUBLIC_IP" >> $GITHUB_ENV
+          echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
 
       - name: Get JAR filename
@@ -59,25 +59,29 @@ jobs:
           echo "Checking for $JAR_FILE"
           ls -lh "$JAR_FILE"
 
-      - name: Copy JAR, Dockerfile, and start script to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ env.EC2_PUBLIC_IP }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "${{ env.JAR_FILE }},Dockerfile,scripts/start-app.sh"
-          target: "~/app"
+      - name: Upload deployment artifacts to S3
+        run: |
+          aws s3 cp "$JAR_FILE" s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/app.jar
+          aws s3 cp Dockerfile s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/Dockerfile
+          aws s3 cp scripts/start-app.sh s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/start-app.sh
 
-      - name: SSH and start Spring app on EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_PUBLIC_IP }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            export DB_URL="jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb"
-            export DB_USERNAME=planteradmin
-            export DB_PASSWORD="${{ secrets.PLANTER_DB_PASSWORD }}"
-            export PROJECT_NAME=planter
-            chmod +x ~/app/scripts/start-app.sh
-            ~/app/scripts/start-app.sh
+      - name: Run remote deployment via SSM
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids "$EC2_INSTANCE_ID" \
+            --comment "Deploy planter app" \
+            --parameters 'commands=[
+              "mkdir -p ~/app",
+              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/app.jar ~/app/app.jar",
+              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/Dockerfile ~/app/Dockerfile",
+              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/start-app.sh ~/app/start-app.sh",
+              "chmod +x ~/app/start-app.sh",
+              "export DB_URL=jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb",
+              "export DB_USERNAME=planteradmin",
+              "export DB_PASSWORD=${{ secrets.PLANTER_DB_PASSWORD }}",
+              "export PROJECT_NAME=planter",
+              "~/app/start-app.sh"
+            ]' \
+            --region us-east-1 \
+            --output text
