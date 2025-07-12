@@ -38,7 +38,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Retrieve EC2 instance ID and RDS Endpoint from Secrets Manager
+      - name: Retrieve EC2 ID, RDS endpoint, deployment bucket, and DB password from Secrets Manager
         id: fetch_secrets
         run: |
           export EC2_INSTANCE_ID=$(aws secretsmanager get-secret-value \
@@ -49,8 +49,18 @@ jobs:
             --secret-id planter/rds_endpoint \
             --query SecretString --output text)
 
+          export DEPLOYMENT_BUCKET=$(aws secretsmanager get-secret-value \
+            --secret-id planter/deployment_bucket \
+            --query SecretString --output text)
+
+          export DB_PASSWORD=$(aws secretsmanager get-secret-value \
+            --secret-id planter/db_password \
+            --query SecretString --output text)
+
           echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
+          echo "DEPLOYMENT_BUCKET=$DEPLOYMENT_BUCKET" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
 
       - name: Get JAR filename
         run: |
@@ -61,9 +71,9 @@ jobs:
 
       - name: Upload deployment artifacts to S3
         run: |
-          aws s3 cp "$JAR_FILE" s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/app.jar
-          aws s3 cp Dockerfile s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/Dockerfile
-          aws s3 cp scripts/start-app.sh s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/start-app.sh
+          aws s3 cp "$JAR_FILE" s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/app.jar
+          aws s3 cp Dockerfile s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/Dockerfile
+          aws s3 cp scripts/start-app.sh s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/start-app.sh
 
       - name: Run remote deployment via SSM
         run: |
@@ -73,13 +83,13 @@ jobs:
             --comment "Deploy planter app" \
             --parameters 'commands=[
               "mkdir -p ~/app",
-              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/app.jar ~/app/app.jar",
-              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/Dockerfile ~/app/Dockerfile",
-              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deployments/start-app.sh ~/app/start-app.sh",
+              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/app.jar ~/app/app.jar",
+              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/Dockerfile ~/app/Dockerfile",
+              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/start-app.sh ~/app/start-app.sh",
               "chmod +x ~/app/start-app.sh",
               "export DB_URL=jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb",
               "export DB_USERNAME=planteradmin",
-              "export DB_PASSWORD=${{ secrets.PLANTER_DB_PASSWORD }}",
+              "export DB_PASSWORD=${{ env.DB_PASSWORD }}",
               "export PROJECT_NAME=planter",
               "~/app/start-app.sh"
             ]' \
