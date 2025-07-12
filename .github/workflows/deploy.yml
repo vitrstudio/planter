@@ -14,6 +14,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
+      GITHUB_ROLE_ARN: arn:aws:iam::962926148312:role/planter-github-actions-role
 
     steps:
       - name: Checkout code
@@ -37,16 +38,10 @@ jobs:
           test -f scripts/start-app.sh
           ls -l build/libs/*.jar
 
-      - name: Retrieve GitHub Role ARN from Secrets Manager
-        id: get_role
-        run: |
-          ROLE_ARN=$(aws secretsmanager get-secret-value --secret-id planter/github_role_arn --query SecretString --output text)
-          echo "ROLE_ARN=$ROLE_ARN" >> $GITHUB_ENV
-
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.ROLE_ARN }}
+          role-to-assume: ${{ env.GITHUB_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Retrieve deployment secrets from AWS Secrets Manager
