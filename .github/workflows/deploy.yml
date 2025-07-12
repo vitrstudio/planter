@@ -67,21 +67,27 @@ jobs:
 
       - name: Run remote deployment via SSM
         run: |
+          echo "Deploying to EC2 instance: $EC2_INSTANCE_ID"
+          
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids "$EC2_INSTANCE_ID" \
             --comment "Deploy planter app" \
-            --parameters commands="[
-              \"mkdir -p ~/app\",
-              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/app.jar ~/app/app.jar\",
-              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/Dockerfile ~/app/Dockerfile\",
-              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/start-app.sh ~/app/start-app.sh\",
-              \"chmod +x ~/app/start-app.sh\",
-              \"export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/planterdb\",
-              \"export DB_USERNAME=planteradmin\",
-              \"export DB_PASSWORD=$DB_PASSWORD\",
-              \"export PROJECT_NAME=planter\",
-              \"~/app/start-app.sh\"
-            ]" \
+            --parameters 'commands=[
+              "echo ==== STEP 1: Create app dir ====",
+              "mkdir -p ~/app",
+              "echo ==== STEP 2: Download files from S3 ====",
+              "aws s3 cp s3://'"$DEPLOYMENT_BUCKET"'/deployments/app.jar ~/app/app.jar",
+              "aws s3 cp s3://'"$DEPLOYMENT_BUCKET"'/deployments/Dockerfile ~/app/Dockerfile",
+              "aws s3 cp s3://'"$DEPLOYMENT_BUCKET"'/deployments/start-app.sh ~/app/start-app.sh",
+              "echo ==== STEP 3: Set permissions and env vars ====",
+              "chmod +x ~/app/start-app.sh",
+              "export DB_URL=jdbc:postgresql://'"$RDS_ENDPOINT"'/planterdb",
+              "export DB_USERNAME=planteradmin",
+              "export DB_PASSWORD='"$DB_PASSWORD"'",
+              "export PROJECT_NAME=planter",
+              "echo ==== STEP 4: Run start-app.sh ====",
+              "bash ~/app/start-app.sh"
+            ]' \
             --region $AWS_REGION \
             --output text
