@@ -8,6 +8,12 @@ jobs:
   deploy:
     name: Build and Deploy to EC2
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: us-east-1
 
     steps:
       - name: Checkout code
@@ -31,36 +37,19 @@ jobs:
           test -f scripts/start-app.sh
           ls -l build/libs/*.jar
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::962926148312:role/planter-github-actions-role
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Retrieve EC2 ID, RDS endpoint, deployment bucket, and DB password from Secrets Manager
+      - name: Retrieve secrets from AWS Secrets Manager
         id: fetch_secrets
         run: |
-          export EC2_INSTANCE_ID=$(aws secretsmanager get-secret-value \
-            --secret-id planter/ec2_instance_id \
-            --query SecretString --output text)
-
-          export RDS_ENDPOINT=$(aws secretsmanager get-secret-value \
-            --secret-id planter/rds_endpoint \
-            --query SecretString --output text)
-
-          export DEPLOYMENT_BUCKET=$(aws secretsmanager get-secret-value \
-            --secret-id planter/deployment_bucket \
-            --query SecretString --output text)
-
-          export DB_PASSWORD=$(aws secretsmanager get-secret-value \
-            --secret-id planter/db_password \
-            --query SecretString --output text)
-
-          echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
-          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
-          echo "DEPLOYMENT_BUCKET=$DEPLOYMENT_BUCKET" >> $GITHUB_ENV
-          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+          echo "EC2_INSTANCE_ID=$(aws secretsmanager get-secret-value --secret-id planter/ec2_instance_id --query SecretString --output text)" >> $GITHUB_ENV
+          echo "RDS_ENDPOINT=$(aws secretsmanager get-secret-value --secret-id planter/rds_endpoint --query SecretString --output text)" >> $GITHUB_ENV
+          echo "DEPLOYMENT_BUCKET=$(aws secretsmanager get-secret-value --secret-id planter/deployment_bucket --query SecretString --output text)" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id planter/db_password --query SecretString --output text)" >> $GITHUB_ENV
 
       - name: Get JAR filename
         run: |
@@ -71,9 +60,9 @@ jobs:
 
       - name: Upload deployment artifacts to S3
         run: |
-          aws s3 cp "$JAR_FILE" s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/app.jar
-          aws s3 cp Dockerfile s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/Dockerfile
-          aws s3 cp scripts/start-app.sh s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/start-app.sh
+          aws s3 cp "$JAR_FILE" s3://$DEPLOYMENT_BUCKET/deployments/app.jar
+          aws s3 cp Dockerfile s3://$DEPLOYMENT_BUCKET/deployments/Dockerfile
+          aws s3 cp scripts/start-app.sh s3://$DEPLOYMENT_BUCKET/deployments/start-app.sh
 
       - name: Run remote deployment via SSM
         run: |
@@ -81,17 +70,17 @@ jobs:
             --document-name "AWS-RunShellScript" \
             --instance-ids "$EC2_INSTANCE_ID" \
             --comment "Deploy planter app" \
-            --parameters 'commands=[
-              "mkdir -p ~/app",
-              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/app.jar ~/app/app.jar",
-              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/Dockerfile ~/app/Dockerfile",
-              "aws s3 cp s3://${{ env.DEPLOYMENT_BUCKET }}/deployments/start-app.sh ~/app/start-app.sh",
-              "chmod +x ~/app/start-app.sh",
-              "export DB_URL=jdbc:postgresql://${{ env.RDS_ENDPOINT }}/planterdb",
-              "export DB_USERNAME=planteradmin",
-              "export DB_PASSWORD=${{ env.DB_PASSWORD }}",
-              "export PROJECT_NAME=planter",
-              "~/app/start-app.sh"
-            ]' \
-            --region us-east-1 \
+            --parameters commands="[
+              \"mkdir -p ~/app\",
+              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/app.jar ~/app/app.jar\",
+              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/Dockerfile ~/app/Dockerfile\",
+              \"aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/start-app.sh ~/app/start-app.sh\",
+              \"chmod +x ~/app/start-app.sh\",
+              \"export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/planterdb\",
+              \"export DB_USERNAME=planteradmin\",
+              \"export DB_PASSWORD=$DB_PASSWORD\",
+              \"export PROJECT_NAME=planter\",
+              \"~/app/start-app.sh\"
+            ]" \
+            --region $AWS_REGION \
             --output text
