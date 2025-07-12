@@ -17,7 +17,7 @@ echo "=== 🏗️  Building Docker image ==="
 docker build -t planter-app .
 
 echo "=== 🚀 Starting container ==="
-docker run -d --name planter-app -p 80 :8080 \
+docker run -d --name planter-app -p 80:8080 \
   -e DB_URL="$DB_URL" \
   -e DB_USERNAME="$DB_USERNAME" \
   -e DB_PASSWORD="$DB_PASSWORD" \
