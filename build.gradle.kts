@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.jpa") version "1.9.0"
 }
 
-group = "com.codefarm"
+group = "studio.vitr"
 version = "0.0.1-SNAPSHOT"
 
 java {
