@@ -68,7 +68,9 @@ jobs:
 
       - name: Run remote deployment via SSM
         run: |
-          aws ssm send-command \
+          set -euo pipefail
+          
+          COMMAND_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids "$EC2_INSTANCE_ID" \
             --comment "Deploy planter app" \
@@ -84,4 +86,29 @@ jobs:
             DB_PASSWORD='"$DB_PASSWORD"' \
             PROJECT_NAME=planter \
             /home/ec2-user/app/start-app.sh"]' \
-            --region $AWS_REGION
+            --region "$AWS_REGION" \
+            --query "Command.CommandId" --output text)
+          
+          echo "✅ Command sent. Command ID: $COMMAND_ID"
+          echo "⏳ Waiting for execution to finish..."
+          
+          # Poll status until it completes
+          STATUS=""
+          while [[ "$STATUS" != "Success" && "$STATUS" != "Cancelled" && "$STATUS" != "Failed" ]]; do
+            sleep 5
+            STATUS=$(aws ssm get-command-invocation \
+              --region "$AWS_REGION" \
+              --command-id "$COMMAND_ID" \
+              --instance-id "$EC2_INSTANCE_ID" \
+              --query "Status" --output text)
+            echo "📦 Current status: $STATUS"
+          done
+          
+          # Print full output
+          echo "📄 Command output:"
+          aws ssm get-command-invocation \
+            --region "$AWS_REGION" \
+            --command-id "$COMMAND_ID" \
+            --instance-id "$EC2_INSTANCE_ID" \
+            --query "StandardOutputContent" --output text
+
