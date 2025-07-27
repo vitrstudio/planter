@@ -14,6 +14,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
+      GITHUB_ROLE_ARN: arn:aws:iam::962926148312:role/planter-github-actions-role
 
     steps:
       - name: Checkout code
@@ -37,30 +38,20 @@ jobs:
           test -f scripts/start-app.sh
           ls -l build/libs/*.jar
 
-      - name: Configure temporary AWS credentials to fetch GitHub role
+      - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::962926148312:role/bootstrap-role
+          role-to-assume: ${{ env.GITHUB_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Retrieve deployment values from SSM
         id: fetch_params
         run: |
-          echo "Fetching role from SSM..."
-          GITHUB_ROLE_ARN=$(aws ssm get-parameter --name /planter/github_role_arn --with-decryption --query Parameter.Value --output text)
-          echo "GITHUB_ROLE_ARN=${GITHUB_ROLE_ARN}" >> $GITHUB_ENV
-          echo "::notice title=Role ARN from SSM::$GITHUB_ROLE_ARN"
-          
+          # If any of these fail, the job will stop immediately
           echo "EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "DB_PASSWORD=$(aws ssm get-parameter --name /planter/db_password --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
-
-      - name: Reconfigure AWS credentials using GitHub role from SSM
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ env.GITHUB_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
 
       - name: Get JAR filename
         run: |
