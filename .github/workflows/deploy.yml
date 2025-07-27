@@ -46,7 +46,11 @@ jobs:
       - name: Retrieve deployment values from SSM
         id: fetch_params
         run: |
-          echo "GITHUB_ROLE_ARN=$(aws ssm get-parameter --name /planter/github_role_arn --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "Fetching role from SSM..."
+          GITHUB_ROLE_ARN=$(aws ssm get-parameter --name /planter/github_role_arn --with-decryption --query Parameter.Value --output text)
+          echo "GITHUB_ROLE_ARN=${GITHUB_ROLE_ARN}" >> $GITHUB_ENV
+          echo "::notice title=Role ARN from SSM::$GITHUB_ROLE_ARN"
+          
           echo "EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
