@@ -44,13 +44,13 @@ jobs:
           role-to-assume: ${{ env.GITHUB_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Retrieve deployment secrets from AWS Secrets Manager
-        id: fetch_secrets
+      - name: Retrieve deployment values from SSM
+        id: fetch_params
         run: |
-          echo "EC2_INSTANCE_ID=$(aws secretsmanager get-secret-value --secret-id planter/ec2_instance_id --query SecretString --output text)" >> $GITHUB_ENV
-          echo "RDS_ENDPOINT=$(aws secretsmanager get-secret-value --secret-id planter/rds_endpoint --query SecretString --output text)" >> $GITHUB_ENV
-          echo "DEPLOYMENT_BUCKET=$(aws secretsmanager get-secret-value --secret-id planter/deployment_bucket --query SecretString --output text)" >> $GITHUB_ENV
-          echo "DB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id planter/db_password --query SecretString --output text)" >> $GITHUB_ENV
+          echo "EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$(aws ssm get-parameter --name /planter/db_password --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
 
       - name: Get JAR filename
         run: |
