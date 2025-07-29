@@ -23,6 +23,8 @@ class ProjectService(
     fun create(user: User, request: ProjectRequest) =  githubClient
         .createRepository(user.githubUserId, request.name)
         .let { adapter.toProject(request, user, it) }
+        .also { user.projects.add(it) }
+        .also { it.user = user }
         .let { projectRepository.save(it) }
 
     fun delete(id: UUID) = projectRepository.deleteById(id)

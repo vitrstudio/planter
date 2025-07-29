@@ -1,9 +1,7 @@
 package studio.vitr.planter.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import jakarta.persistence.CascadeType.ALL
-import jakarta.persistence.FetchType.LAZY
 import java.util.*
 
 @Entity
@@ -14,12 +12,6 @@ data class User(
     val githubUserId: Long,
     val createdAt: Long = System.currentTimeMillis(),
 
-    @OneToMany(
-        mappedBy = "user",
-        fetch = LAZY,
-        cascade = [ALL],
-        orphanRemoval = true
-    )
-    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = [ALL], orphanRemoval = true)
     val projects: MutableList<Project> = mutableListOf()
 )

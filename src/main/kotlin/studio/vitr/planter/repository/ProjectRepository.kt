@@ -1,11 +1,14 @@
 package studio.vitr.planter.repository
 
-import studio.vitr.planter.model.Project
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import studio.vitr.planter.model.Project
 import java.util.*
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, UUID> {
-    fun findByUserId(userId: UUID): List<Project>
+
+    @Query("SELECT p FROM Project p WHERE p.user.id = :id")
+    fun findByUserId(id: UUID): List<Project>
 }
