@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType.IDENTITY
 @Table(name = "projects")
 data class Project(
         @Id @GeneratedValue(strategy = IDENTITY) val id: Long = 0,
+        val name: String,
         val githubRepositoryId: Long,
 
         @Enumerated(STRING)
