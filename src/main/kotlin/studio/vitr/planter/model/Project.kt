@@ -1,19 +1,20 @@
 package studio.vitr.planter.model
 
 import jakarta.persistence.*
-import java.util.*
+import jakarta.persistence.EnumType.STRING
+import jakarta.persistence.GenerationType.IDENTITY
 
 @Entity
 @Table(name = "projects")
 data class Project(
-        @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
-        @Version val version: Int? = null,
-        val name: String,
+        @Id @GeneratedValue(strategy = IDENTITY) val id: Long = 0,
         val githubRepositoryId: Long,
+
+        @Enumerated(STRING)
         val type: ProjectType,
         val createdAt: Long = System.currentTimeMillis(),
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id", nullable = false)
-        var user: User
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        var user: User? = null
 )
