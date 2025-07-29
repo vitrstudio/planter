@@ -1,12 +1,10 @@
 package studio.vitr.planter.adapter
 
-import studio.vitr.planter.constants.Properties.ID
-import studio.vitr.planter.errors.InvalidParameter
+import org.springframework.stereotype.Component
 import studio.vitr.planter.model.Project
 import studio.vitr.planter.model.User
 import studio.vitr.planter.model.api.ProjectRequest
 import studio.vitr.planter.model.api.ProjectResponse
-import org.springframework.stereotype.Component
 
 @Component
 class ProjectAdapter {
@@ -18,7 +16,7 @@ class ProjectAdapter {
     )
 
     fun toProjectResponse(project: Project) = ProjectResponse(
-            id = project.id?: throw InvalidParameter(ID),
+            id = project.id,
             name = project.name,
             type = project.type,
     )
