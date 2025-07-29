@@ -1,9 +1,8 @@
 package studio.vitr.planter.repository
 
-import studio.vitr.planter.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.*
+import studio.vitr.planter.model.User
 
 @Repository
-interface UserRepository : JpaRepository<User, UUID>
+interface UserRepository : JpaRepository<User, Long>
