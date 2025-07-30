@@ -8,7 +8,7 @@ import studio.vitr.planter.model.api.UserRequest
 import studio.vitr.planter.service.UserService
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(
     private val userService: UserService,
     private val userAdapter: UserAdapter,

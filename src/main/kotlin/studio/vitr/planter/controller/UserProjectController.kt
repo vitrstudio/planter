@@ -10,7 +10,7 @@ import studio.vitr.planter.service.ProjectService
 import studio.vitr.planter.service.UserService
 
 @RestController
-@RequestMapping("/api/users/{userId}/projects")
+@RequestMapping("/users/{userId}/projects")
 class UserProjectController(
     private val userService: UserService,
     private val projectService: ProjectService,
