@@ -55,7 +55,7 @@ jobs:
 
       - name: Get JAR filename
         run: |
-          JAR_FILE=$(ls build/libs/*-SNAPSHOT.jar | grep -v plain)
+          JAR_FILE=$(ls build/libs/*.jar | grep -v plain)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
           echo "Checking for $JAR_FILE"
           ls -lh "$JAR_FILE"
