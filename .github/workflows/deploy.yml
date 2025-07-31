@@ -101,10 +101,13 @@ jobs:
             --instance-ids $EC2_INSTANCE_ID \
             --comment "Deploy planter app" \
             --parameters file://ssm-params.json \
+            --output-s3-bucket-name $DEPLOYMENT_BUCKET \
+            --output-s3-key-prefix ssm-logs/$EC2_INSTANCE_ID \
             --region $AWS_REGION \
             --query "Command.CommandId" \
             --output text)
           echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
+
 
       - name: Wait for SSM command to finish & show logs
         run: |
