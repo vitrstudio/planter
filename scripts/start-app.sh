@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "⏱️ $(date) — Starting deployment script"
+
 echo "=== 📁 Cleaning / Preparing ~/app ==="
 cd /home/ec2-user/app || { echo "❌ Failed to cd into /home/ec2-user/app"; exit 1; }
 
@@ -14,7 +16,12 @@ echo "🧼 Removing old Docker container"
 docker rm planter-app || echo "No container to remove"
 
 echo "🗑️ Removing old Docker images"
-docker images "planter-app" --format "{{.ID}}" | xargs -r docker rmi -f || echo "No images to remove"
+IMAGE_IDS=$(docker images "planter-app" --format "{{.ID}}")
+if [ -n "$IMAGE_IDS" ]; then
+  echo "$IMAGE_IDS" | xargs -r docker rmi -f
+else
+  echo "No images to remove"
+fi
 
 echo "📦 Verifying new files"
 [ -f app.jar ] && echo "✅ app.jar exists" || { echo "❌ Missing app.jar"; exit 1; }
