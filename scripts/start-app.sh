@@ -1,13 +1,22 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== 📁 Verifying files in ~/app ==="
+echo "=== 📁 Cleaning / Preparing ~/app ==="
 cd /home/ec2-user/app || { echo "❌ Failed to cd into /home/ec2-user/app"; exit 1; }
 
-echo "✅ In app folder. Listing files:"
-ls -lah || { echo "❌ Failed to list files"; exit 1; }
+echo "🧹 Removing old JAR files"
+rm -f *.jar || true
 
-echo "=== 🧪 Verifying required files ==="
+echo "🛑 Stopping old Docker container (if running)"
+docker stop planter-app || echo "No running container to stop"
+
+echo "🧼 Removing old Docker container"
+docker rm planter-app || echo "No container to remove"
+
+echo "🗑️ Removing old Docker images"
+docker images "planter-app" --format "{{.ID}}" | xargs -r docker rmi -f || echo "No images to remove"
+
+echo "📦 Verifying new files"
 [ -f app.jar ] && echo "✅ app.jar exists" || { echo "❌ Missing app.jar"; exit 1; }
 [ -f Dockerfile ] && echo "✅ Dockerfile exists" || { echo "❌ Missing Dockerfile"; exit 1; }
 
@@ -16,14 +25,10 @@ echo "DB_URL=$DB_URL"
 echo "DB_USERNAME=$DB_USERNAME"
 echo "PROJECT_NAME=$PROJECT_NAME"
 
-echo "=== 🛑 Stopping old container (if exists) ==="
-docker stop planter-app || echo "No running container to stop"
-docker rm planter-app || echo "No container to remove"
-
-echo "=== 🏗️  Building Docker image ==="
+echo "🏗️  Building Docker image"
 docker build -t planter-app . || { echo "❌ Docker build failed"; exit 1; }
 
-echo "=== 🚀 Starting container ==="
+echo "🚀 Starting new Docker container"
 docker run -d --name planter-app -p 80:8080 \
   -e DB_URL="$DB_URL" \
   -e DB_USERNAME="$DB_USERNAME" \

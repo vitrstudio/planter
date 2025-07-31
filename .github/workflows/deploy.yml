@@ -47,7 +47,6 @@ jobs:
       - name: Retrieve deployment values from SSM
         id: fetch_params
         run: |
-          # If any of these fail, the job will stop immediately
           echo "EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
@@ -69,7 +68,7 @@ jobs:
       - name: Run remote deployment via SSM
         run: |
           set -euo pipefail
-          
+
           COMMAND_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids "$EC2_INSTANCE_ID" \
@@ -88,11 +87,10 @@ jobs:
             /home/ec2-user/app/start-app.sh"]' \
             --region "$AWS_REGION" \
             --query "Command.CommandId" --output text)
-          
+
           echo "✅ Command sent. Command ID: $COMMAND_ID"
           echo "⏳ Waiting for execution to finish..."
-          
-          # Poll status until it completes
+
           STATUS=""
           while [[ "$STATUS" != "Success" && "$STATUS" != "Cancelled" && "$STATUS" != "Failed" ]]; do
             sleep 5
@@ -103,12 +101,10 @@ jobs:
               --query "Status" --output text)
             echo "📦 Current status: $STATUS"
           done
-          
-          # Print full output
+
           echo "📄 Command output:"
           aws ssm get-command-invocation \
             --region "$AWS_REGION" \
             --command-id "$COMMAND_ID" \
             --instance-id "$EC2_INSTANCE_ID" \
             --query "StandardOutputContent" --output text
-
