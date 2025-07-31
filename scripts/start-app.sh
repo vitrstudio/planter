@@ -2,8 +2,6 @@
 set -euo pipefail
 
 echo "⏱️ $(date) — Starting deployment script"
-
-echo "=== 📁 Cleaning / Preparing ~/app ==="
 cd /home/ec2-user/app || { echo "❌ Failed to cd into /home/ec2-user/app"; exit 1; }
 
 echo "🧹 Removing old JAR files"
