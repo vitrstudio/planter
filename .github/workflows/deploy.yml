@@ -56,7 +56,6 @@ jobs:
         run: |
           JAR_FILE=$(ls build/libs/*.jar | grep -v plain)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
-          echo "Checking for $JAR_FILE"
           ls -lh "$JAR_FILE"
 
       - name: Upload deployment artifacts to S3
@@ -72,16 +71,22 @@ jobs:
             "commands": [
               "#!/bin/bash",
               "set -eux",
-              "echo \"🚀 Remote script started on \$(hostname)\"",
+              "",
+              "# wipe out old app folder and fetch fresh files",
+              "rm -rf /home/ec2-user/app",
               "mkdir -p /home/ec2-user/app",
+              "",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/app.jar /home/ec2-user/app/app.jar",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/Dockerfile /home/ec2-user/app/Dockerfile",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/start-app.sh /home/ec2-user/app/start-app.sh",
               "chmod +x /home/ec2-user/app/start-app.sh",
+              "",
               "export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/planterdb",
               "export DB_USERNAME=planteradmin",
               "export DB_PASSWORD=$DB_PASSWORD",
               "export PROJECT_NAME=planter",
+              "",
+              "# hand off to the deploy script",
               "bash /home/ec2-user/app/start-app.sh"
             ]
           }
