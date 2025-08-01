@@ -73,6 +73,9 @@ jobs:
             "commands": [
               "#!/bin/bash",
               "set -eux",
+              "# export project & DB name",
+              "export PROJECT_NAME=$PROJECT_NAME",
+              "export DB_NAME=$DB_NAME",
               "",
               "# stop & remove existing container",
               "docker stop planter-app || true",
@@ -91,6 +94,8 @@ jobs:
               "export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/planterdb",
               "export DB_USERNAME=planteradmin",
               "export DB_PASSWORD=$DB_PASSWORD",
+              "export PROJECT_NAME=$PROJECT_NAME",
+              "export DB_NAME=$DB_NAME",
               "",
               "# build & run",
               "bash /home/ec2-user/app/start-app.sh"
