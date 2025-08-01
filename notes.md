@@ -1,5 +1,5 @@
 ## todo list
 
-- I suspect that the app is not restarting in production
-- If it restarts, it's not recreating the database
-- But I believe neither is happening, because if it would be restarting, it would not return uuids when creating a user
+- The artifacts are created correctly in S3
+- Next step, make sure the pipeline deletes all content inside ec2
+- Then place the artifiacts inside the ec2 and run the app
