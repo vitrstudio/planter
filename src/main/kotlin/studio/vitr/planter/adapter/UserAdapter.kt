@@ -16,6 +16,7 @@ class UserAdapter {
 
     fun toUserResponse(user: User) = UserResponse(
         id = user.id ?: throw InvalidParameter(ID),
-        githubUserId = user.githubUserId
+        githubUserId = user.githubUserId,
+        createdAt = user.createdAt,
     )
 }

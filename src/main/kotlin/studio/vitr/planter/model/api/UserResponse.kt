@@ -4,5 +4,6 @@ import java.util.*
 
 class UserResponse(
     val id: UUID,
-    val githubUserId: Long
+    val githubUserId: Long,
+    val createdAt: Long
 )

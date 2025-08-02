@@ -6,5 +6,6 @@ import java.util.UUID
 class ProjectResponse(
     val id: UUID,
     val name: String,
-    val type: ProjectType
+    val type: ProjectType,
+    val createdAt: Long
 )

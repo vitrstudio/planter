@@ -21,9 +21,10 @@ class ProjectAdapter(
     )
 
     fun toProjectResponse(project: Project) = ProjectResponse(
-            id = project.id ?: throw InvalidParameter(ID),
-            name = project.name,
-            type = project.type,
+        id = project.id ?: throw InvalidParameter(ID),
+        name = project.name,
+        type = project.type,
+        createdAt = project.createdAt,
     )
 
     fun toProjectWithUserResponse(project: Project, user: User) = ProjectWithUserResponse(
