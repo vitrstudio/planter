@@ -1,6 +1,8 @@
 package studio.vitr.planter.model.api
 
+import java.util.*
+
 class UserResponse(
-    val id: Long,
+    val id: UUID,
     val githubUserId: Long
 )

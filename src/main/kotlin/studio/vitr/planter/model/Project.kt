@@ -1,13 +1,14 @@
 package studio.vitr.planter.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import jakarta.persistence.EnumType.STRING
-import jakarta.persistence.GenerationType.IDENTITY
+import java.util.*
 
 @Entity
 @Table(name = "projects")
 data class Project(
-        @Id @GeneratedValue(strategy = IDENTITY) val id: Long = 0,
+        @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         val name: String,
         val githubRepositoryId: Long,
 
@@ -16,6 +17,7 @@ data class Project(
         val createdAt: Long = System.currentTimeMillis(),
 
         @ManyToOne
+        @JsonBackReference
         @JoinColumn(name = "user_id")
-        var user: User? = null
+        var user: User
 )

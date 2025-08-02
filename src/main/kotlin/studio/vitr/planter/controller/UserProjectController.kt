@@ -8,6 +8,7 @@ import studio.vitr.planter.model.api.ProjectRequest
 import studio.vitr.planter.model.api.ProjectResponse
 import studio.vitr.planter.service.ProjectService
 import studio.vitr.planter.service.UserService
+import java.util.*
 
 @RestController
 @RequestMapping("/api/users/{userId}/projects")
@@ -18,12 +19,12 @@ class UserProjectController(
 ) {
 
     @GetMapping
-    fun getProjects(@PathVariable userId: Long)= projectService.getByUserId(userId)
+    fun getProjects(@PathVariable userId: UUID)= projectService.getByUserId(userId)
         .map { projectAdapter.toProjectResponse(it) }
 
     @PostMapping
     fun createProject(
-        @PathVariable userId: Long,
+        @PathVariable userId: UUID,
         @RequestBody request: ProjectRequest,
     ): ProjectResponse {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
@@ -33,7 +34,7 @@ class UserProjectController(
 
     @DeleteMapping("/{projectId}")
     fun deleteProject(
-        @PathVariable userId: Long,
-        @PathVariable projectId: Long
+        @PathVariable userId: UUID,
+        @PathVariable projectId: UUID
     ) = projectService.delete(projectId)
 }

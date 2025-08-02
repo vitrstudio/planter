@@ -7,6 +7,7 @@ import studio.vitr.planter.model.Project
 import studio.vitr.planter.model.User
 import studio.vitr.planter.model.api.ProjectRequest
 import studio.vitr.planter.repository.ProjectRepository
+import java.util.*
 
 @Service
 class ProjectService(
@@ -17,12 +18,12 @@ class ProjectService(
 
     fun getAll(): List<Project> = projectRepository.findAll()
 
-    fun getByUserId(userId: Long) = projectRepository.findByUserId(userId)
+    fun getByUserId(userId: UUID) = projectRepository.findByUserId(userId)
 
     fun create(user: User, request: ProjectRequest) =  githubClient
         .createRepository(user.githubUserId, request.name)
         .let { adapter.toProject(request, user, it) }
         .let { projectRepository.save(it) }
 
-    fun delete(id: Long) = projectRepository.deleteById(id)
+    fun delete(id: UUID) = projectRepository.deleteById(id)
 }
