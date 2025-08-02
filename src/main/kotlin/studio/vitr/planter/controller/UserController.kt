@@ -9,7 +9,7 @@ import studio.vitr.planter.service.UserService
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(
     private val userService: UserService,
     private val userAdapter: UserAdapter,

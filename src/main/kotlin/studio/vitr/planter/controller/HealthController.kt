@@ -10,7 +10,7 @@ class HealthController(
     private val appVersion: String
 ) {
 
-    @GetMapping("/api/health")
+    @GetMapping("/health")
     fun health(): Map<String, Any> {
         val appVersion = appVersion
         return mapOf(

@@ -11,7 +11,7 @@ import studio.vitr.planter.service.UserService
 import java.util.*
 
 @RestController
-@RequestMapping("/api/users/{userId}/projects")
+@RequestMapping("/users/{userId}/projects")
 class UserProjectController(
     private val userService: UserService,
     private val projectService: ProjectService,
