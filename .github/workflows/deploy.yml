@@ -49,10 +49,19 @@ jobs:
       - name: Retrieve deployment values from SSM
         id: fetch_params
         run: |
-          echo "EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "DB_PASSWORD=$(aws ssm get-parameter --name /planter/db_password --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          EC2_INSTANCE_ID=$(aws ssm get-parameter --name /planter/ec2_instance_id --with-decryption --query Parameter.Value --output text)
+          RDS_ENDPOINT=$(aws ssm get-parameter --name /planter/rds_endpoint --with-decryption --query Parameter.Value --output text)
+          DEPLOYMENT_BUCKET=$(aws ssm get-parameter --name /planter/deployment_bucket --with-decryption --query Parameter.Value --output text)
+          DB_PASSWORD=$(aws ssm get-parameter --name /planter/db_password --with-decryption --query Parameter.Value --output text)
+
+          echo "::add-mask::$DB_PASSWORD"
+          echo "::add-mask::$DEPLOYMENT_BUCKET"
+          echo "::add-mask::$RDS_ENDPOINT"
+
+          echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
+          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
+          echo "DEPLOYMENT_BUCKET=$DEPLOYMENT_BUCKET" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
 
       - name: Get JAR filename
         run: |
@@ -73,31 +82,19 @@ jobs:
             "commands": [
               "#!/bin/bash",
               "set -eux",
-              "# export project & DB name",
               "export PROJECT_NAME=$PROJECT_NAME",
               "export DB_NAME=$DB_NAME",
-              "",
-              "# stop & remove existing container",
               "docker stop planter-app || true",
               "docker rm planter-app || true",
-              "",
-              "# wipe old app dir and fetch fresh files",
               "rm -rf /home/ec2-user/app",
               "mkdir -p /home/ec2-user/app",
-              "",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/app.jar /home/ec2-user/app/app.jar",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/Dockerfile /home/ec2-user/app/Dockerfile",
               "aws s3 cp s3://$DEPLOYMENT_BUCKET/deployments/start-app.sh /home/ec2-user/app/start-app.sh",
               "chmod +x /home/ec2-user/app/start-app.sh",
-              "",
-              "# export DB variables",
-              "export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/planterdb",
+              "export DB_URL=jdbc:postgresql://$RDS_ENDPOINT/$DB_NAME",
               "export DB_USERNAME=planteradmin",
               "export DB_PASSWORD=$DB_PASSWORD",
-              "export PROJECT_NAME=$PROJECT_NAME",
-              "export DB_NAME=$DB_NAME",
-              "",
-              "# build & run",
               "bash /home/ec2-user/app/start-app.sh"
             ]
           }
