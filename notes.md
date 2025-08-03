@@ -1,3 +1,9 @@
-## todo list
+## Next Steps Backend
 
-- See if with split cloudfronts the DB responds correctly
+- Check if github actions are safe (logging any sensitive data)
+- Make allowed origins for CORS a variable
+
+## Next Steps Frontend
+- Check if github actions are safe (logging any sensitive data)
+
+## Next Steps Business
