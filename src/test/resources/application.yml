@@ -1,7 +1,7 @@
 spring:
   application:
     name: planter-test
-    version: 2.0.0
+    version: 2.0.1
   jpa:
     hibernate:
       ddl-auto: create-drop
