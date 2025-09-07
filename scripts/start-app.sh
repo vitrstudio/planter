@@ -16,7 +16,9 @@ docker run -d \
   -e DB_URL="${DB_URL}" \
   -e DB_USERNAME="${DB_USERNAME}" \
   -e DB_PASSWORD="${DB_PASSWORD}" \
-  --restart unless-stopped \
+  -e GITHUB_CLIENT_ID="${GITHUB_CLIENT_ID}" \
+  -e GITHUB_CLIENT_SECRET="${GITHUB_CLIENT_SECRET}" \
+  -e JWT_SECRET="${JWT_SECRET}" \
   planter-app
 
 echo "✅ planter-app is up and running"
