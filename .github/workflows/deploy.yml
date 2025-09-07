@@ -105,7 +105,7 @@ jobs:
               "export DB_USERNAME=planteradmin",
               "export DB_PASSWORD=$DB_PASSWORD",
               "export GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID",
-              "export GITHUB_CLIENT_SECRET=$DB_GITHUB_CLIENT_SECRET",
+              "export GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET",
               "export JWT_SECRET=$JWT_SECRET",
               "bash /home/ec2-user/app/start-app.sh"
             ]
