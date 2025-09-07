@@ -1,6 +1,6 @@
 package studio.vitr.planter.model.api
 
-import studio.vitr.planter.model.ProjectType
+import studio.vitr.planter.model.enums.ProjectType
 import java.util.*
 
 class ProjectWithUserResponse(

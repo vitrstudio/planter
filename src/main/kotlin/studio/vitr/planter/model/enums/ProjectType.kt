@@ -1,4 +1,4 @@
-package studio.vitr.planter.model
+package studio.vitr.planter.model.enums
 
 enum class ProjectType {
     ECOMMERCE,

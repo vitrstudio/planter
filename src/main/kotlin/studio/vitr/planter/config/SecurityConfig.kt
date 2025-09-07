@@ -7,12 +7,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfigurationSource
+import studio.vitr.planter.auth.AuthService
+import studio.vitr.planter.auth.JwtAuthenticationFilter
+import studio.vitr.planter.service.UserService
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val corsConfigurationSource: CorsConfigurationSource
+    private val authService: AuthService,
+    private val userService: UserService,
+    private val corsConfigurationSource: CorsConfigurationSource,
 ) {
 
     @Bean
@@ -35,6 +41,8 @@ class SecurityConfig(
         .csrf { it.disable() }
         .sessionManagement { it.sessionCreationPolicy(STATELESS) }
         .authorizeHttpRequests { it.anyRequest().authenticated() }
-        //.addFilterBefore(githubAuthenticationFilter)
+        .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
         .build()
+
+    private fun jwtAuthFilter() = JwtAuthenticationFilter(authService, userService)
 }

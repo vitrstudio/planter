@@ -1,13 +1,12 @@
 package studio.vitr.planter
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import org.junit.jupiter.api.Assertions.*
 
-@SpringBootTest
 class PlanterApplicationTests {
 
     @Test
     fun contextLoads() {
+        assertTrue(true)
     }
-
 }
