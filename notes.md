@@ -1,7 +1,7 @@
 ### TODO
 
-- the github authentication is working
-- now I think I need to add the application auth filter
+- Everything working in prod
+- I need to deploy the frontend and change the github callback url for prod
 - I need to check if everything is correctly stored in the DB
 
 

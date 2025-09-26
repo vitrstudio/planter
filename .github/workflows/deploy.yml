@@ -17,6 +17,7 @@ jobs:
       GITHUB_ROLE_ARN: arn:aws:iam::962926148312:role/planter-github-actions-role
       PROJECT_NAME: planter
       DB_NAME: planterdb
+      AUTH_CALLBACK_URL: =https://vitruviux.com/auth/github/callback
 
     steps:
       - name: Checkout code
@@ -93,6 +94,7 @@ jobs:
               "set -eux",
               "export PROJECT_NAME=$PROJECT_NAME",
               "export DB_NAME=$DB_NAME",
+              "export AUTH_CALLBACK_URL=$AUTH_CALLBACK_URL",
               "docker stop planter-app || true",
               "docker rm planter-app || true",
               "rm -rf /home/ec2-user/app",
