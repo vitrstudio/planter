@@ -17,7 +17,7 @@ jobs:
       GITHUB_ROLE_ARN: arn:aws:iam::962926148312:role/planter-github-actions-role
       PROJECT_NAME: planter
       DB_NAME: planterdb
-      AUTH_CALLBACK_URL: https://vitruviux.com/auth/github/callback/
+      AUTH_CALLBACK_URL: https://vitruviux.com/auth/github/callback/index.html
 
     steps:
       - name: Checkout code
