@@ -6,6 +6,7 @@ import studio.vitr.planter.constants.Properties.USER
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.integrations.GithubClient
 import studio.vitr.planter.model.api.ProjectRequest
+import studio.vitr.planter.model.integrations.GithubRepoRequest
 import java.util.*
 
 @Service
@@ -22,7 +23,9 @@ class ProjectService(
 
     fun create(userId: UUID, request: ProjectRequest) {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
-        githubClient.createRepo()
+        val repo = GithubRepoRequest(request.name)
+        val githubAccessToken = "$BEARER ${user.providerAccessToken}"
+        githubClient.createRepo(githubAccessToken, repo)
     }
 
     fun delete(userId: UUID, id: UUID) {

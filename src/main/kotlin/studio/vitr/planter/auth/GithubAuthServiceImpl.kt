@@ -29,7 +29,7 @@ class GithubAuthServiceImpl(
     override fun generateAuthUrl() = "https://github.com/login/oauth/authorize?" +
             "client_id=${config.clientId}&" +
             "redirect_uri=${urlEncodeUtf8(config.redirectUri)}&" +
-            "scope=${urlEncodeUtf8("read:user user:email")}&" +
+            "scope=${urlEncodeUtf8("public_repo delete_repo read:user user:email")}&" +
             "state=${UUID.randomUUID()}&" +
             "response_type=code"
 
