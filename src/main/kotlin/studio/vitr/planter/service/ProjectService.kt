@@ -7,6 +7,7 @@ import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.integrations.GithubClient
 import studio.vitr.planter.model.api.ProjectRequest
 import studio.vitr.planter.model.integrations.GithubRepoRequest
+import studio.vitr.planter.model.integrations.GithubRepoTopicsRequest
 import java.util.*
 
 @Service
@@ -23,9 +24,11 @@ class ProjectService(
 
     fun create(userId: UUID, request: ProjectRequest) {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
-        val repo = GithubRepoRequest(request.name)
+        val repoRequest = GithubRepoRequest(request.name)
         val githubAccessToken = "$BEARER ${user.providerAccessToken}"
-        githubClient.createRepo(githubAccessToken, repo)
+        val repo = githubClient.createRepo(githubAccessToken, repoRequest)
+        val topics = GithubRepoTopicsRequest(listOf("vitruviux"))
+        githubClient.setRepoTopics(githubAccessToken,  repo.owner.login, repo.name, topics)
     }
 
     fun delete(userId: UUID, id: UUID) {

@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class GithubRepo(
+data class GithubRepoOwner(
+    val login: String,
     val id: Long,
-    val name: String,
     val htmlUrl: String,
-    val topics: List<String> = emptyList(),
-    val owner: GithubRepoOwner,
+    val type: String
 )
