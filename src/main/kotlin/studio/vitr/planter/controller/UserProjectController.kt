@@ -9,23 +9,23 @@ import java.util.*
 @RestController
 @RequestMapping("/users/{userId}/projects")
 class UserProjectController(
-    private val projectService: ProjectService,
-    private val projectAdapter: ProjectAdapter,
+    private val service: ProjectService,
+    private val adapter: ProjectAdapter,
 ) {
 
     @GetMapping
-    fun getProjects(@PathVariable userId: UUID)= projectService.getByUserId(userId)
-        .map { projectAdapter.toProjectResponse(it) }
+    fun getProjects(@PathVariable userId: UUID)= service.getByUserId(userId)
+        .map { adapter.toProjectResponse(it) }
 
     @PostMapping
     fun createProject(
         @PathVariable userId: UUID,
         @RequestBody request: ProjectRequest,
-    ) = projectService.create(userId, request)
+    ) = service.create(userId, request)
 
     @DeleteMapping("/{projectId}")
     fun deleteProject(
         @PathVariable userId: UUID,
         @PathVariable projectId: UUID
-    ) = projectService.delete(userId, projectId)
+    ) = service.delete(userId, projectId)
 }

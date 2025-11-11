@@ -1,5 +1,6 @@
-package studio.vitr.planter.model.api
+package studio.vitr.planter.deprecated
 
+import studio.vitr.planter.model.api.UserResponse
 import studio.vitr.planter.model.enums.ProjectType
 import java.util.*
 

@@ -39,11 +39,11 @@ class GithubCredentialsServiceImpl(private val repository: GithubCredentialsRepo
         userId = userId,
         githubUserId = githubUserId,
         scope = tokens.scope,
-        accessToken = tokens.accessToken ?: "", // todo -fix
+        accessToken = tokens.accessToken ?: "", // todo - fix
     )
 
     private fun updatedCredentials(credentials: GithubCredentials, tokens: GithubTokenResponse) = credentials.copy(
         scope = tokens.scope,
-        accessToken = tokens.accessToken ?: "", // todo -fix
+        accessToken = tokens.accessToken ?: "", // todo - fix
     )
 }

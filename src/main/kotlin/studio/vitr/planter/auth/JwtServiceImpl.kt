@@ -22,7 +22,7 @@ class JwtServiceImpl(
 ): JwtService {
 
     private val signingKey = Keys.hmacShaKeyFor(config.secret.toByteArray(UTF_8))
-    private val accessTokenExpirationMilliseconds = 900_000L // 15 minutes
+    private val accessTokenExpirationMilliseconds = 3600_000L // 60 minutes
     private val refreshTokenExpirationMilliseconds = 2_592_000_000 // 30 days
 
     override fun generateAccessToken(userId: UUID) = generateToken(userId, ACCESS, accessTokenExpirationMilliseconds)

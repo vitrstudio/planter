@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 // todo - improve this model
-@JsonIgnoreProperties(ignoreUnknown = true) // <— ignore any extra fields
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class) // map snake_case to camelCase
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class GithubTokenResponse(
     // success shape
     val accessToken: String? = null,
