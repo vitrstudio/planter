@@ -5,6 +5,7 @@ import studio.vitr.planter.constants.Properties
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.model.User
 import studio.vitr.planter.model.enums.AuthProvider
+import studio.vitr.planter.model.integrations.GithubTokenResponse
 import studio.vitr.planter.model.integrations.GithubUser
 import studio.vitr.planter.repository.UserRepository
 import studio.vitr.planter.utils.TimeUtil
@@ -20,9 +21,9 @@ class UserServiceImpl(
         .findById(id)
         .orElse(null)
 
-    override fun upsertUser(githubUser: GithubUser): User = repository
+    override fun upsertUser(githubUser: GithubUser, githubTokens: GithubTokenResponse): User = repository
         .findByGithubUserId(githubUser.id)
-        .let{ getNewOrUpdatedUserCopy(it, githubUser) }
+        .let{ getNewOrUpdatedUserCopy(it, githubUser, githubTokens) }
         .let { repository.save(it) }
 
     override fun delete(id: UUID) = get(id)
@@ -30,23 +31,25 @@ class UserServiceImpl(
         ?.also { credentialsService.deleteUserCredentials(id) }
         ?: throw NotFound(Properties.USER, id.toString())
 
-    private fun getNewOrUpdatedUserCopy(user: User?, githubUser: GithubUser) = user
-        ?.let { updatedUser(it, githubUser) }
-        ?: newUser(githubUser)
+    private fun getNewOrUpdatedUserCopy(user: User?, githubUser: GithubUser, githubTokens: GithubTokenResponse) = user
+        ?.let { updatedUser(it, githubUser, githubTokens) }
+        ?: newUser(githubUser, githubTokens)
 
-    private fun newUser(u: GithubUser) = User(
+    private fun newUser(u: GithubUser, githubTokens: GithubTokenResponse) = User(
         id = null,
         username = u.login,
         githubUserId = u.id,
         email = u.email,
         avatarUrl = u.avatarUrl,
         provider = AuthProvider.GITHUB,
+        providerAccessToken = githubTokens.accessToken,
         createdAt = TimeUtil.now()
     )
 
-    private fun updatedUser(user: User, githubUser: GithubUser) = user.copy(
+    private fun updatedUser(user: User, githubUser: GithubUser, githubTokens: GithubTokenResponse) = user.copy(
         email = githubUser.email,
         username = githubUser.login,
         avatarUrl = githubUser.avatarUrl,
+        providerAccessToken = githubTokens.accessToken,
     )
 }

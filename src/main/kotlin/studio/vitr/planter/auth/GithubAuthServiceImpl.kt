@@ -36,7 +36,7 @@ class GithubAuthServiceImpl(
     override fun signIn(code: String, state: String): Session {
         val githubTokens = exchangeCodeForTokens(code, state)
         val githubUser = githubClient.getUserInfo("$BEARER ${githubTokens.accessToken}")
-        val user = userService.upsertUser(githubUser)
+        val user = userService.upsertUser(githubUser, githubTokens)
         val userId = user.id ?: throw MissingExpectedParameter(Properties.USER_ID)
         credentialsService.upsertGithubCredentials(userId, githubUser.id, githubTokens)
 

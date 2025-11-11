@@ -15,6 +15,7 @@ data class User(
     val username: String,
     val githubUserId: Long,
     val email: String,
+    val providerAccessToken: String?,
     val avatarUrl: String,
     val createdAt: Long,
     val provider: AuthProvider,

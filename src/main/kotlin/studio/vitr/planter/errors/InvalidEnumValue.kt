@@ -1,3 +1,9 @@
 package studio.vitr.planter.errors
 
-class InvalidEnumValue(enumType: String, value: String): Error("invalid enum value: $enumType - $value")
+import org.springframework.http.HttpStatus.BAD_REQUEST
+
+class InvalidEnumValue(enumType: String, value: String): ApiException(
+    "invalid enum value: $enumType - $value",
+    BAD_REQUEST,
+    "INVALID_ENUM_VALUE"
+)

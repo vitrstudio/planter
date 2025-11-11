@@ -1,26 +1,32 @@
 package studio.vitr.planter.service
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.adapter.ProjectAdapter
-import studio.vitr.planter.model.Project
-import studio.vitr.planter.model.User
+import studio.vitr.planter.constants.Constants.BEARER
+import studio.vitr.planter.constants.Properties.USER
+import studio.vitr.planter.errors.NotFound
+import studio.vitr.planter.integrations.GithubClient
 import studio.vitr.planter.model.api.ProjectRequest
-import studio.vitr.planter.repository.ProjectRepository
 import java.util.*
 
 @Service
 class ProjectService(
-    private val projectRepository: ProjectRepository,
-    private val adapter: ProjectAdapter,
+    private val userService: UserService,
+    private val githubClient: GithubClient,
 ) {
 
-    fun getAll(): List<Project> = projectRepository.findAll()
+    fun getByUserId(userId: UUID) = userService
+        .get(userId)
+        ?.let { githubClient.getUserRepos("$BEARER ${it.providerAccessToken}") }
+        ?.filter { it.topics.contains("vitruviux") }
+        ?: emptyList()
 
-    fun getByUserId(userId: UUID) = projectRepository.findByUserId(userId)
+    fun create(userId: UUID, request: ProjectRequest) {
+        val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
+        githubClient.createRepo()
+    }
 
-    fun create(user: User, request: ProjectRequest) = adapter
-        .toProject(request, user, 1L) // todo - Replace fake repository id with real id
-        .let { projectRepository.save(it) }
-
-    fun delete(id: UUID) = projectRepository.deleteById(id)
+    fun delete(userId: UUID, id: UUID) {
+        val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
+        githubClient.deleteRepo()
+    }
 }

@@ -1,10 +1,9 @@
-package studio.vitr.planter.repository
+package studio.vitr.planter.deprecated
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import studio.vitr.planter.model.Project
-import java.util.UUID
+import java.util.*
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, UUID> {

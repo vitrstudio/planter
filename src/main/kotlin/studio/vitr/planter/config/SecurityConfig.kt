@@ -27,6 +27,7 @@ class SecurityConfig(
         .securityMatchers { it
             .requestMatchers("/health")
             .requestMatchers("/auth/**")
+            .requestMatchers("/error")
         }
         .cors { it.configurationSource(corsConfigurationSource) }
         .csrf { it.disable() }
