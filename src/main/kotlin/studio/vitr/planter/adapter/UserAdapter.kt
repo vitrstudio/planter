@@ -9,9 +9,11 @@ import studio.vitr.planter.model.api.UserResponse
 @Component
 class UserAdapter {
 
-    fun toUserResponse(user: User) = UserResponse(
-        id = user.id ?: throw MissingExpectedParameter(USER_ID),
-        githubUserId = user.githubUserId,
-        createdAt = user.createdAt
+    fun toUserResponse(u: User) = UserResponse(
+        id = u.id ?: throw MissingExpectedParameter(USER_ID),
+        githubUserId = u.githubUserId,
+        name = u.username,
+        avatarUrl = u.avatarUrl,
+        createdAt = u.createdAt
     )
 }
