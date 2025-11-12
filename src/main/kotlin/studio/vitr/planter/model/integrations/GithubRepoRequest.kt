@@ -10,10 +10,6 @@ data class GithubRepoRequest(
     val name: String,
     val description: String?,
     val private: Boolean,
-    val autoInit: Boolean,
-    val hasIssues: Boolean,
-    val hasProjects: Boolean,
-    val hasWiki: Boolean,
 ) {
 
     // add secondary constructor
@@ -21,9 +17,5 @@ data class GithubRepoRequest(
         name = name,
         description = "",
         private = false,
-        autoInit = false,
-        hasIssues = false,
-        hasProjects = false,
-        hasWiki = false
     )
 }

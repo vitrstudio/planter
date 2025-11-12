@@ -42,6 +42,18 @@ interface GithubClient {
         @RequestBody body: GithubRepoRequest
     ): GithubRepo
 
+    @PostExchange(
+        url = "/repos/{organisation}/{template}/generate",
+        contentType = APPLICATION_JSON_VALUE,
+        accept = ["application/vnd.github.baptiste-preview+json"]
+    )
+    fun generateRepoFromTemplate(
+        @RequestHeader("Authorization") authHeader: String,
+        @RequestBody body: GithubRepoRequest,
+        @PathVariable organisation: String,
+        @PathVariable template: String
+    ): GithubRepo
+
     @PutExchange(
         url = "/repos/{owner}/{repo}/topics",
         contentType = APPLICATION_JSON_VALUE,

@@ -16,6 +16,9 @@ class ProjectService(
     private val githubClient: GithubClient,
 ) {
 
+    private val org = "vitrstudio"
+    private val template = "bookstore"
+
     fun getByUserId(userId: UUID) = userService
         .get(userId)
         ?.let { githubClient.getUserRepos("$BEARER ${it.providerAccessToken}") }
@@ -26,7 +29,7 @@ class ProjectService(
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
         val repoRequest = GithubRepoRequest(request.name)
         val githubAccessToken = "$BEARER ${user.providerAccessToken}"
-        val repo = githubClient.createRepo(githubAccessToken, repoRequest)
+        val repo = githubClient.generateRepoFromTemplate(githubAccessToken, repoRequest, org, template)
         val topics = GithubRepoTopicsRequest(listOf("vitruviux"))
         githubClient.setRepoTopics(githubAccessToken,  repo.owner.login, repo.name, topics)
     }
