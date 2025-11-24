@@ -1,7 +1,7 @@
 package studio.vitr.planter.service
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.constants.Properties
+import studio.vitr.planter.constants.Properties.USER
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.model.User
 import studio.vitr.planter.model.enums.AuthProvider
@@ -26,10 +26,15 @@ class UserServiceImpl(
         .let{ getNewOrUpdatedUserCopy(it, githubUser, githubTokens) }
         .let { repository.save(it) }
 
+    override fun setAwsAccountId(id: UUID, awsAccountId: String) = get(id)
+        ?.copy(awsAccountId = awsAccountId)
+        ?.let { repository.save(it) }
+        ?: throw NotFound(USER, id.toString())
+
     override fun delete(id: UUID) = get(id)
         ?.let { repository.delete(it) }
         ?.also { credentialsService.deleteUserCredentials(id) }
-        ?: throw NotFound(Properties.USER, id.toString())
+        ?: throw NotFound(USER, id.toString())
 
     private fun getNewOrUpdatedUserCopy(user: User?, githubUser: GithubUser, githubTokens: GithubTokenResponse) = user
         ?.let { updatedUser(it, githubUser, githubTokens) }
@@ -43,6 +48,7 @@ class UserServiceImpl(
         avatarUrl = u.avatarUrl,
         provider = AuthProvider.GITHUB,
         providerAccessToken = githubTokens.accessToken,
+        awsAccountId = null,
         createdAt = TimeUtil.now()
     )
 

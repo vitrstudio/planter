@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AWS resources provisioning and monitoring role
+
+Parameters:
+  ExternalId:
+    Type: String
+  ControlPlaneAccountId:
+    Type: String
+
+Resources:
+  VitruviuxProvisioningRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "VitruviuxProvisioningRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${ControlPlaneAccountId}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalId
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AmazonRDSFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess

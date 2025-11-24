@@ -7,8 +7,8 @@ import studio.vitr.planter.constants.Constants.BEARER
 import studio.vitr.planter.constants.Properties
 import studio.vitr.planter.constants.Standards.UTF_8
 import studio.vitr.planter.errors.MissingExpectedParameter
-import studio.vitr.planter.integrations.GithubClient
-import studio.vitr.planter.integrations.GithubOauthClient
+import studio.vitr.planter.integrations.github.GithubClient
+import studio.vitr.planter.integrations.github.GithubOauthClient
 import studio.vitr.planter.model.dto.Session
 import studio.vitr.planter.service.GithubCredentialsService
 import studio.vitr.planter.service.UserService

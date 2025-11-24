@@ -19,4 +19,5 @@ data class User(
     val avatarUrl: String,
     val createdAt: Long,
     val provider: AuthProvider,
+    val awsAccountId: String?
 )

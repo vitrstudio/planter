@@ -2,8 +2,10 @@ package studio.vitr.planter.controller
 
 import org.springframework.web.bind.annotation.*
 import studio.vitr.planter.adapter.UserAdapter
+import studio.vitr.planter.auth.AwsService
 import studio.vitr.planter.constants.Properties.USER
 import studio.vitr.planter.errors.NotFound
+import studio.vitr.planter.model.api.AwsAccountSetupRequest
 import studio.vitr.planter.service.UserService
 import java.util.*
 
@@ -11,6 +13,7 @@ import java.util.*
 @RequestMapping("/users")
 class UserController(
     private val userService: UserService,
+    private val awsService: AwsService,
     private val userAdapter: UserAdapter,
 ) {
 
@@ -18,6 +21,14 @@ class UserController(
     fun getUser(@PathVariable userId: UUID) = userService.get(userId)
         ?.let { userAdapter.toUserResponse(it) }
         ?: throw NotFound(USER, userId.toString())
+
+    @PostMapping("/{userId}/aws")
+    fun setupAwsAccount(
+        @PathVariable userId: UUID,
+        @RequestBody request: AwsAccountSetupRequest
+    ) = userService
+        .setAwsAccountId(userId, request.accountId)
+        .let { awsService.getAwsAccountSetupUrl(it) }
 
     @DeleteMapping("/{userId}")
     fun deleteUser(@PathVariable userId: UUID) = userService.delete(userId)

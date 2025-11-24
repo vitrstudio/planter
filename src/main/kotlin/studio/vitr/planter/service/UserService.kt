@@ -8,5 +8,6 @@ import java.util.*
 interface UserService {
     fun get(id: UUID): User?
     fun upsertUser(githubUser: GithubUser, githubTokens: GithubTokenResponse): User
+    fun setAwsAccountId(id: UUID, awsAccountId: String): User
     fun delete(id: UUID)
 }

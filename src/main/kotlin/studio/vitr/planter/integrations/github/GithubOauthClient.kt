@@ -1,4 +1,4 @@
-package studio.vitr.planter.integrations
+package studio.vitr.planter.integrations.github
 
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.web.bind.annotation.RequestBody
