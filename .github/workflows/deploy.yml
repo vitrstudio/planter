@@ -57,6 +57,7 @@ jobs:
           GITHUB_CLIENT_ID=$(aws ssm get-parameter --name /planter/github_client_id --with-decryption --query Parameter.Value --output text)
           GITHUB_CLIENT_SECRET=$(aws ssm get-parameter --name /planter/github_client_secret --with-decryption --query Parameter.Value --output text)
           JWT_SECRET=$(aws ssm get-parameter --name /planter/jwt_secret --with-decryption --query Parameter.Value --output text)
+          AWS_ACCOUNT_ID=$(aws ssm get-parameter --name /planter/aws_account_id --with-decryption --query Parameter.Value --output text)
 
           echo "::add-mask::$DB_PASSWORD"
           echo "::add-mask::$DEPLOYMENT_BUCKET"
@@ -64,6 +65,7 @@ jobs:
           echo "::add-mask::$GITHUB_CLIENT_ID"
           echo "::add-mask::$GITHUB_CLIENT_SECRET"
           echo "::add-mask::$JWT_SECRET"
+          echo "::add-mask::$AWS_ACCOUNT_ID"
 
           echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
           echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
@@ -72,6 +74,7 @@ jobs:
           echo "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" >> $GITHUB_ENV
           echo "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" >> $GITHUB_ENV
           echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
 
       - name: Get JAR filename
         run: |
@@ -109,6 +112,7 @@ jobs:
               "export GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID",
               "export GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET",
               "export JWT_SECRET=$JWT_SECRET",
+              "export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID",
               "bash /home/ec2-user/app/start-app.sh"
             ]
           }
