@@ -12,6 +12,7 @@ class UserAdapter {
     fun toUserResponse(u: User) = UserResponse(
         id = u.id ?: throw MissingExpectedParameter(USER_ID),
         githubUserId = u.githubUserId,
+        awsAccountId = u.awsAccountId,
         name = u.username,
         avatarUrl = u.avatarUrl,
         createdAt = u.createdAt
