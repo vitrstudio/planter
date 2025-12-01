@@ -20,6 +20,7 @@ docker run -d \
   -e GITHUB_CLIENT_SECRET="${GITHUB_CLIENT_SECRET}" \
   -e AUTH_CALLBACK_URL="${AUTH_CALLBACK_URL}" \
   -e JWT_SECRET="${JWT_SECRET}" \
+  -e AWS_ACCOUNT_ID="${AWS_ACCOUNT_ID}" \
   planter-app
 
 echo "✅ planter-app is up and running"
