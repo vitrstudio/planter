@@ -36,7 +36,7 @@ class JwtAuthenticationFilter(
         ?.also { SecurityContextHolder.getContext().authentication = it }
         ?: throw InvalidParameter(ACCESS_TOKEN)
 
-    private fun userDetails(user: studio.vitr.planter.model.User) = User.builder()
+    private fun userDetails(user: studio.vitr.planter.model.db.User) = User.builder()
         .username(user.username)
         .password(UUID.randomUUID().toString())
         .authorities(USER)

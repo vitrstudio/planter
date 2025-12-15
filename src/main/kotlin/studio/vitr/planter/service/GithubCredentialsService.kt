@@ -1,6 +1,6 @@
 package studio.vitr.planter.service
 
-import studio.vitr.planter.model.GithubCredentials
+import studio.vitr.planter.model.db.GithubCredentials
 import studio.vitr.planter.model.integrations.GithubTokenResponse
 import java.util.*
 

@@ -3,7 +3,7 @@ package studio.vitr.planter.deprecated
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import jakarta.persistence.EnumType.STRING
-import studio.vitr.planter.model.User
+import studio.vitr.planter.model.db.User
 import studio.vitr.planter.model.enums.ProjectType
 import java.util.*
 

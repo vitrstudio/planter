@@ -3,7 +3,7 @@ package studio.vitr.planter.service
 import org.springframework.stereotype.Service
 import studio.vitr.planter.constants.Properties
 import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.GithubCredentials
+import studio.vitr.planter.model.db.GithubCredentials
 import studio.vitr.planter.model.integrations.GithubTokenResponse
 import studio.vitr.planter.repository.GithubCredentialsRepository
 import java.util.*

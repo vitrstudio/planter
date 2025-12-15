@@ -1,6 +1,6 @@
 package studio.vitr.planter.service
 
-import studio.vitr.planter.model.User
+import studio.vitr.planter.model.db.User
 import studio.vitr.planter.model.integrations.GithubTokenResponse
 import studio.vitr.planter.model.integrations.GithubUser
 import java.util.*

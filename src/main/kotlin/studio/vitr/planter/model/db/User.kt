@@ -1,4 +1,4 @@
-package studio.vitr.planter.model
+package studio.vitr.planter.model.db
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

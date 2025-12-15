@@ -3,7 +3,7 @@ package studio.vitr.planter.adapter
 import org.springframework.stereotype.Component
 import studio.vitr.planter.constants.Properties.USER_ID
 import studio.vitr.planter.errors.MissingExpectedParameter
-import studio.vitr.planter.model.User
+import studio.vitr.planter.model.db.User
 import studio.vitr.planter.model.api.UserResponse
 
 @Component

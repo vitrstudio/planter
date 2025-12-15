@@ -3,7 +3,7 @@ package studio.vitr.planter.service
 import org.springframework.stereotype.Service
 import studio.vitr.planter.constants.Properties.USER
 import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.User
+import studio.vitr.planter.model.db.User
 import studio.vitr.planter.model.enums.AuthProvider
 import studio.vitr.planter.model.integrations.GithubTokenResponse
 import studio.vitr.planter.model.integrations.GithubUser

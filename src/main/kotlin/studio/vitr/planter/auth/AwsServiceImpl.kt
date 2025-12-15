@@ -2,7 +2,7 @@ package studio.vitr.planter.auth
 
 import org.springframework.stereotype.Service
 import studio.vitr.planter.config.AwsConfig
-import studio.vitr.planter.model.User
+import studio.vitr.planter.model.db.User
 
 @Service
 class AwsServiceImpl(
