@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfigurationSource
 import studio.vitr.planter.auth.AuthService
 import studio.vitr.planter.auth.JwtAuthenticationFilter
+import studio.vitr.planter.service.GithubUserService
 import studio.vitr.planter.service.UserService
 
 @Configuration
@@ -18,6 +19,7 @@ import studio.vitr.planter.service.UserService
 class SecurityConfig(
     private val authService: AuthService,
     private val userService: UserService,
+    private val githubUserService: GithubUserService,
     private val corsConfigurationSource: CorsConfigurationSource,
 ) {
 
@@ -45,5 +47,5 @@ class SecurityConfig(
         .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
         .build()
 
-    private fun jwtAuthFilter() = JwtAuthenticationFilter(authService, userService)
+    private fun jwtAuthFilter() = JwtAuthenticationFilter(authService, userService, githubUserService)
 }

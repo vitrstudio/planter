@@ -13,11 +13,14 @@ import studio.vitr.planter.constants.Constants.BEARER
 import studio.vitr.planter.constants.Headers.AUTHORIZATION
 import studio.vitr.planter.constants.Properties.ACCESS_TOKEN
 import studio.vitr.planter.errors.InvalidParameter
+import studio.vitr.planter.model.db.GithubUser
+import studio.vitr.planter.service.GithubUserService
 import java.util.UUID
 
 class JwtAuthenticationFilter(
     private val authenticationService: AuthService,
     private val userService: UserService,
+    private val githubUserService: GithubUserService,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, chain: FilterChain) {
@@ -31,13 +34,14 @@ class JwtAuthenticationFilter(
         ?.also { authenticationService.validateAccessToken(it) }
         ?.let { authenticationService.getUserId(it) }
         ?.let { userService.get(it) }
+        ?.let { githubUserService.get(it.githubAccountId) }
         ?.let { userDetails(it) }
         ?.let { UsernamePasswordAuthenticationToken(it, null, it.authorities) }
         ?.also { SecurityContextHolder.getContext().authentication = it }
         ?: throw InvalidParameter(ACCESS_TOKEN)
 
-    private fun userDetails(user: studio.vitr.planter.model.db.User) = User.builder()
-        .username(user.username)
+    private fun userDetails(u: GithubUser) = User.builder()
+        .username(u.username)
         .password(UUID.randomUUID().toString())
         .authorities(USER)
         .build()
