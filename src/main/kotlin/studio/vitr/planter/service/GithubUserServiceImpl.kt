@@ -37,7 +37,7 @@ class GithubUserServiceImpl(private val repository: GithubUserRepository): Githu
     private fun newGithubUser(account: GithubAccount, tokens: GithubTokenResponse) = GithubUser(
         id = null,
         accountId = account.id,
-        username = account.name ?: "",
+        username = account.login,
         email = account.email,
         avatarUrl = account.avatarUrl,
         scope = tokens.scope,
@@ -45,7 +45,7 @@ class GithubUserServiceImpl(private val repository: GithubUserRepository): Githu
     )
 
     private fun updatedGithubUser(user: GithubUser, account: GithubAccount, tokens: GithubTokenResponse) = user.copy(
-        username = account.name ?: "",
+        username = account.login,
         email = account.email,
         avatarUrl = account.avatarUrl,
         scope = tokens.scope,
