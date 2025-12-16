@@ -4,13 +4,13 @@ import org.springframework.stereotype.Service
 import studio.vitr.planter.adapter.GithubAdapter
 import studio.vitr.planter.config.GithubConfig
 import studio.vitr.planter.constants.Constants.BEARER
-import studio.vitr.planter.constants.Properties
+import studio.vitr.planter.constants.Properties.USER_ID
 import studio.vitr.planter.constants.Standards.UTF_8
 import studio.vitr.planter.errors.MissingExpectedParameter
 import studio.vitr.planter.integrations.github.GithubClient
 import studio.vitr.planter.integrations.github.GithubOauthClient
 import studio.vitr.planter.model.dto.Session
-import studio.vitr.planter.service.GithubCredentialsService
+import studio.vitr.planter.service.GithubUserService
 import studio.vitr.planter.service.UserService
 import java.net.URLEncoder
 import java.util.*
@@ -22,7 +22,7 @@ class GithubAuthServiceImpl(
     private val githubClient: GithubClient,
     private val jwtService: JwtService,
     private val userService: UserService,
-    private val credentialsService: GithubCredentialsService,
+    private val githubUserService: GithubUserService,
     private val adapter: GithubAdapter,
 ): GithubAuthService {
 
@@ -34,11 +34,11 @@ class GithubAuthServiceImpl(
             "response_type=code"
 
     override fun signIn(code: String, state: String): Session {
-        val githubTokens = exchangeCodeForTokens(code, state)
-        val githubUser = githubClient.getUserInfo("$BEARER ${githubTokens.accessToken}")
-        val user = userService.upsertUser(githubUser, githubTokens)
-        val userId = user.id ?: throw MissingExpectedParameter(Properties.USER_ID)
-        credentialsService.upsertGithubCredentials(userId, githubUser.id, githubTokens)
+        val tokens = exchangeCodeForTokens(code, state)
+        val account = githubClient.getAccount("$BEARER ${tokens.accessToken}")
+        val githubUser = githubUserService.upsert(account, tokens)
+        val user = userService.getByGithubUserId(githubUser.accountId) ?: userService.create(account)
+        val userId = user.id ?: throw MissingExpectedParameter(USER_ID)
 
         val accessToken = jwtService.generateAccessToken(userId)
         val refreshToken = jwtService.generateRefreshToken(userId)

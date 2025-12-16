@@ -2,6 +2,7 @@ package studio.vitr.planter.service
 
 import org.springframework.stereotype.Service
 import studio.vitr.planter.constants.Constants.BEARER
+import studio.vitr.planter.constants.Properties.GITHUB_USER
 import studio.vitr.planter.constants.Properties.USER
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.integrations.aws.AwsClient
@@ -17,6 +18,7 @@ import java.util.*
 @Service
 class ProjectService(
     private val userService: UserService,
+    private val githubUserService: GithubUserService,
     private val githubClient: GithubClient,
     private val awsClient: AwsClient,
 ) {
@@ -27,15 +29,17 @@ class ProjectService(
 
     fun getByUserId(userId: UUID) = userService
         .get(userId)
-        ?.let { githubClient.getUserRepos("$BEARER ${it.providerAccessToken}") }
+        ?.let { githubUserService.get(it.githubAccountId) }
+        ?.let { githubClient.getUserRepos("$BEARER ${it.accessToken}") }
         ?.filter { it.topics.contains("vitruviux") }
         ?.map { Project(it, getInfra(it)) }
         ?: emptyList()
 
     fun create(userId: UUID, request: ProjectRequest) {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
+        val githubUser = githubUserService.get(user.githubAccountId) ?: throw NotFound(GITHUB_USER, userId.toString())
         val repoRequest = GithubRepoRequest(request.name)
-        val githubAccessToken = "$BEARER ${user.providerAccessToken}"
+        val githubAccessToken = "$BEARER ${githubUser.accessToken}"
         val repo = githubClient.generateRepoFromTemplate(githubAccessToken, repoRequest, org, template)
         val topics = GithubRepoTopicsRequest(listOf("vitruviux"))
         githubClient.setRepoTopics(githubAccessToken,  repo.owner.login, repo.name, topics)

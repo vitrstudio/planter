@@ -9,6 +9,6 @@ import java.util.UUID
 @Repository
 interface UserRepository : JpaRepository<User, UUID> {
 
-    @Query("SELECT u FROM User u WHERE u.githubUserId = :id")
-    fun findByGithubUserId(id: Long): User?
+    @Query("SELECT u FROM User u WHERE u.githubAccountId = :id")
+    fun findByGithubAccountId(id: Long): User?
 }

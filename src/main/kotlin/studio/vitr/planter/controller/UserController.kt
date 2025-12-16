@@ -3,9 +3,14 @@ package studio.vitr.planter.controller
 import org.springframework.web.bind.annotation.*
 import studio.vitr.planter.adapter.UserAdapter
 import studio.vitr.planter.auth.AwsService
+import studio.vitr.planter.constants.Properties
+import studio.vitr.planter.constants.Properties.GITHUB_USER
 import studio.vitr.planter.constants.Properties.USER
+import studio.vitr.planter.errors.MissingExpectedParameter
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.model.api.AwsAccountSetupRequest
+import studio.vitr.planter.model.api.UserResponse
+import studio.vitr.planter.service.GithubUserService
 import studio.vitr.planter.service.UserService
 import java.util.*
 
@@ -13,14 +18,17 @@ import java.util.*
 @RequestMapping("/users")
 class UserController(
     private val userService: UserService,
+    private val githubUserService: GithubUserService,
     private val awsService: AwsService,
     private val userAdapter: UserAdapter,
 ) {
 
     @GetMapping("/{userId}")
-    fun getUser(@PathVariable userId: UUID) = userService.get(userId)
-        ?.let { userAdapter.toUserResponse(it) }
-        ?: throw NotFound(USER, userId.toString())
+    fun getUser(@PathVariable userId: UUID): UserResponse {
+        val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
+        val githubUser = githubUserService.get(user.githubAccountId) ?: throw NotFound(GITHUB_USER, userId.toString())
+        return userAdapter.toUserResponse(user, githubUser)
+    }
 
     @PostMapping("/{userId}/aws")
     fun setupAwsAccount(
@@ -31,5 +39,9 @@ class UserController(
         .let { awsService.getAwsAccountSetupUrl(it) }
 
     @DeleteMapping("/{userId}")
-    fun deleteUser(@PathVariable userId: UUID) = userService.delete(userId)
+    fun deleteUser(@PathVariable userId: UUID) {
+        val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
+        userService.delete(userId)
+        githubUserService.delete(user.githubAccountId)
+    }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.service.annotation.PutExchange
 import studio.vitr.planter.model.integrations.GithubRepo
 import studio.vitr.planter.model.integrations.GithubRepoRequest
 import studio.vitr.planter.model.integrations.GithubRepoTopicsRequest
-import studio.vitr.planter.model.integrations.GithubUser
+import studio.vitr.planter.model.integrations.GithubAccount
 
 @HttpExchange(accept = [APPLICATION_JSON_VALUE])
 interface GithubClient {
@@ -20,9 +20,9 @@ interface GithubClient {
         url = "/user",
         accept = ["application/vnd.github.v3+json"]
     )
-    fun getUserInfo(
+    fun getAccount(
         @RequestHeader("Authorization") authHeader: String
-    ): GithubUser
+    ): GithubAccount
 
     @GetExchange(
         url = "/user/repos?per_page=100",
