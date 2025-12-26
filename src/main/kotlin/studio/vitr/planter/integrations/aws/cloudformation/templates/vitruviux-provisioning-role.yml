@@ -1,28 +1,42 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: AWS resources provisioning and monitoring role
+Description: Vitruviux GitHub Actions OIDC provisioning role
 
 Parameters:
-  ExternalId:
+  GitHubOwner:
     Type: String
-  ControlPlaneAccountId:
+    Description: GitHub username or org that will own the repositories
+
+  GitHubEnvironment:
     Type: String
+    Default: vitruviux-prod
+    Description: GitHub Actions environment required to assume the role
 
 Resources:
   VitruviuxProvisioningRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "VitruviuxProvisioningRole"
+      RoleName: VitruviuxProvisioningRole
+
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Sub "arn:aws:iam::${ControlPlaneAccountId}:root"
-            Action: "sts:AssumeRole"
+              Federated: !Sub "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+            Action: sts:AssumeRoleWithWebIdentity
             Condition:
               StringEquals:
-                sts:ExternalId: !Ref ExternalId
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:environment: !Ref GitHubEnvironment
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubOwner}/*:*"
+
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2FullAccess
         - arn:aws:iam::aws:policy/AmazonRDSFullAccess
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+Outputs:
+  DeploymentRoleArn:
+    Description: IAM role assumed by GitHub Actions via OIDC
+    Value: !GetAtt VitruviuxProvisioningRole.Arn

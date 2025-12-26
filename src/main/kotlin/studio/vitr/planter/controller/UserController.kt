@@ -3,10 +3,8 @@ package studio.vitr.planter.controller
 import org.springframework.web.bind.annotation.*
 import studio.vitr.planter.adapter.UserAdapter
 import studio.vitr.planter.auth.AwsService
-import studio.vitr.planter.constants.Properties
 import studio.vitr.planter.constants.Properties.GITHUB_USER
 import studio.vitr.planter.constants.Properties.USER
-import studio.vitr.planter.errors.MissingExpectedParameter
 import studio.vitr.planter.errors.NotFound
 import studio.vitr.planter.model.api.AwsAccountSetupRequest
 import studio.vitr.planter.model.api.UserResponse
@@ -36,7 +34,9 @@ class UserController(
         @RequestBody request: AwsAccountSetupRequest
     ) = userService
         .setAwsAccountId(userId, request.accountId)
-        .let { awsService.getAwsAccountSetupUrl(it) }
+        .let { githubUserService.get(it.githubAccountId) }
+        ?.let { awsService.getAwsAccountSetupUrl(it) }
+        ?: throw NotFound(GITHUB_USER, userId.toString())
 
     @DeleteMapping("/{userId}")
     fun deleteUser(@PathVariable userId: UUID) {
