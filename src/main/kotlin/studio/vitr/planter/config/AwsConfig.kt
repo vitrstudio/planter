@@ -7,4 +7,7 @@ import org.springframework.stereotype.Component
 class AwsConfig(
     @Value("\${aws.region}")
     val region: String,
+
+    @Value("\${aws.control-plane-account-id}")
+    val controlPlaneAccountId: String,
 )

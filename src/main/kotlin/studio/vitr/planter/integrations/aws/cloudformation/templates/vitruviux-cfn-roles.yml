@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Vitruviux GitHub Actions deployment role and backend observer role
+
+Parameters:
+  GitHubOwner:
+    Type: String
+    Description: GitHub username or organization owning the repositories
+
+  GitHubEnvironment:
+    Type: String
+    Default: vitruviux-prod
+    Description: Required GitHub Actions environment
+
+  ControlPlaneAccountId:
+    Type: String
+    Description: AWS account ID of the Vitruviux backend (read-only access)
+
+Resources:
+  # ------------------------------------------------------------
+  # GitHub Actions OIDC role (DEPLOYMENT)
+  # ------------------------------------------------------------
+  VitruviuxProvisioningRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "VitruviuxProvisioningRole-${GitHubOwner}"
+
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:environment: !Ref GitHubEnvironment
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubOwner}/*:*"
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AmazonRDSFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  # ------------------------------------------------------------
+  # Backend observer role (READ-ONLY)
+  # ------------------------------------------------------------
+  VitruviuxObserverRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "VitruviuxObserverRole-${GitHubOwner}"
+
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${ControlPlaneAccountId}:root"
+            Action: sts:AssumeRole
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
+
+Outputs:
+  DeploymentRoleArn:
+    Description: IAM role assumed by GitHub Actions via OIDC
+    Value: !GetAtt VitruviuxProvisioningRole.Arn
+
+  ObserverRoleArn:
+    Description: IAM role assumed by Vitruviux backend (read-only)
+    Value: !GetAtt VitruviuxObserverRole.Arn
