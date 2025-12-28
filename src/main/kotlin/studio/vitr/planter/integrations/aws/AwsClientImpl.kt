@@ -15,7 +15,6 @@ import software.amazon.awssdk.services.sts.StsClient
 import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
 import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
 import studio.vitr.planter.config.AwsConfig
-import studio.vitr.planter.model.integrations.GithubRepo
 
 @Component
 class AwsClientImpl(
@@ -23,7 +22,6 @@ class AwsClientImpl(
 ) : AwsClient {
 
     private val region by lazy { Region.of(awsConfig.region) }
-    private val projectIdPrefix = "vx-"
 
     private val stsClient by lazy { StsClient.builder()
         .region(region)
@@ -58,26 +56,24 @@ class AwsClientImpl(
 
     private fun getObserverRole(username: String) = "arn:aws:iam::${awsConfig.controlPlaneAccountId}:role/VitruviuxObserverRole-$username"
 
-    override fun isEc2InstanceRunning(repo: GithubRepo) = ec2Client(getObserverRole(repo.owner.login))
-        .describeInstances { it.filters(nameFilter("${repo.name}-api")) }
+    override fun isEc2InstanceRunning(instanceName: String, username: String) = ec2Client(getObserverRole(username))
+        .describeInstances { it.filters(nameFilter(instanceName)) }
         .reservations()
         .flatMap { it.instances() }
         .any { it.state().name() == RUNNING }
 
-    override fun isRdsInstanceAvailable(repo: GithubRepo) = try {
-        val projectId = getProjectId(repo.topics)
-        val observerRoleArn = getObserverRole(repo.owner.login)
-        rdsClient(observerRoleArn).describeDBInstances { it.dbInstanceIdentifier("${repo.name}-rds-$projectId") }
+    override fun isRdsInstanceAvailable(instanceName: String, username: String) = try {
+        val observerRoleArn = getObserverRole(username)
+        rdsClient(observerRoleArn).describeDBInstances { it.dbInstanceIdentifier(instanceName) }
             .dbInstances()
             .any { it.dbInstanceStatus().equals("available", ignoreCase = true) }
     } catch (ex: DbInstanceNotFoundException) {
         false
     }
 
-    override fun doesBucketExist(repo: GithubRepo) = try {
-        val projectId = getProjectId(repo.topics)
-        val observerRoleArn = getObserverRole(repo.owner.login)
-        s3Client(observerRoleArn).headBucket { it.bucket("${repo.name}-app-$projectId") }
+    override fun doesBucketExist(instanceName: String, username: String) = try {
+        val observerRoleArn = getObserverRole(username)
+        s3Client(observerRoleArn).headBucket { it.bucket(instanceName) }
         true
     } catch (ex: NoSuchBucketException) {
         false
@@ -91,9 +87,4 @@ class AwsClientImpl(
         .name("tag:Name")
         .values(name)
         .build()
-
-    private fun getProjectId(topics: List<String>) = topics
-        .firstOrNull { it.startsWith(projectIdPrefix) }
-        ?.removePrefix(projectIdPrefix)
-        ?: "unknown"
 }

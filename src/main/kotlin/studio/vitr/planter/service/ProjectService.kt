@@ -9,6 +9,7 @@ import studio.vitr.planter.integrations.aws.AwsClient
 import studio.vitr.planter.integrations.github.GithubClient
 import studio.vitr.planter.model.Project
 import studio.vitr.planter.model.api.ProjectRequest
+import studio.vitr.planter.model.db.GithubUser
 import studio.vitr.planter.model.integrations.AwsInfra
 import studio.vitr.planter.model.integrations.GithubRepo
 import studio.vitr.planter.model.integrations.GithubRepoRequest
@@ -25,14 +26,17 @@ class ProjectService(
 
     private val org = "vitrstudio"
     private val template = "bookstore"
+    private val projectIdPrefix = "vx-"
 
-    fun getByUserId(userId: UUID) = userService
-        .get(userId)
-        ?.let { githubUserService.get(it.githubAccountId) }
-        ?.let { githubClient.getUserRepos("$BEARER ${it.accessToken}") }
-        ?.filter { it.topics.contains("vitruviux") }
-        ?.map { Project(it, getInfra(it)) }
-        ?: emptyList()
+    fun getByUserId(userId: UUID): List<Project> {
+        val user = userService.get(userId)
+        val githubUser = user?.let { githubUserService.get(it.githubAccountId) }
+        return githubUser
+            ?.let { githubClient.getUserRepos("$BEARER ${it.accessToken}") }
+            ?.filter { it.topics.contains("vitruviux") }
+            ?.map { Project(it, getInfra(it, githubUser)) }
+            ?: emptyList()
+    }
 
     fun create(userId: UUID, request: ProjectRequest) {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
@@ -49,9 +53,22 @@ class ProjectService(
         githubClient.deleteRepo()
     }
 
-    private fun getInfra(repo: GithubRepo) = AwsInfra(
-        isApiRunning = awsClient.isEc2InstanceRunning(repo),
-        isDatabaseRunning = awsClient.isRdsInstanceAvailable(repo),
-        isApplicationBucketCreated =  awsClient.doesBucketExist(repo)
-    )
+    private fun getInfra(repo: GithubRepo, githubUser: GithubUser): AwsInfra {
+        val projectId = getProjectId(repo.topics)
+        val username = githubUser.username
+        val apiName = "${repo.name}-api"
+        val dbName = "${repo.name}-rds-$projectId"
+        val bucketName = "${repo.name}-app-$projectId"
+
+        return AwsInfra(
+            isApiRunning = awsClient.isEc2InstanceRunning(apiName, username),
+            isDatabaseRunning = awsClient.isRdsInstanceAvailable(dbName, username),
+            isApplicationBucketCreated =  awsClient.doesBucketExist(bucketName, username)
+        )
+    }
+
+    private fun getProjectId(topics: List<String>) = topics
+        .firstOrNull { it.startsWith(projectIdPrefix) }
+        ?.removePrefix(projectIdPrefix)
+        ?: "unknown"
 }
