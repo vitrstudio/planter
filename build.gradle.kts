@@ -45,6 +45,7 @@ dependencies {
     implementation("software.amazon.awssdk:ec2")
     implementation("software.amazon.awssdk:rds")
     implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:sts")
 
     // Test
     testImplementation("com.h2database:h2")

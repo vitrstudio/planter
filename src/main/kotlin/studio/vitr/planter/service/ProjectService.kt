@@ -25,7 +25,6 @@ class ProjectService(
 
     private val org = "vitrstudio"
     private val template = "bookstore"
-    private val projectIdPrefix = "vx-"
 
     fun getByUserId(userId: UUID) = userService
         .get(userId)
@@ -50,15 +49,9 @@ class ProjectService(
         githubClient.deleteRepo()
     }
 
-    private fun getInfra(repo: GithubRepo) = getProjectId(repo.topics).let { AwsInfra(
-            isApiRunning = awsClient.isEc2InstanceRunning("${repo.name}-api"),
-            isDatabaseRunning = awsClient.isRdsInstanceAvailable("${repo.name}-rds-$it"),
-            isApplicationBucketCreated =  awsClient.doesBucketExist("${repo.name}-app-$it")
-        )
-    }
-
-    private fun getProjectId(topics: List<String>) = topics
-        .firstOrNull { it.startsWith(projectIdPrefix) }
-        ?.removePrefix(projectIdPrefix)
-        ?: "unknown"
+    private fun getInfra(repo: GithubRepo) = AwsInfra(
+        isApiRunning = awsClient.isEc2InstanceRunning(repo),
+        isDatabaseRunning = awsClient.isRdsInstanceAvailable(repo),
+        isApplicationBucketCreated =  awsClient.doesBucketExist(repo)
+    )
 }
