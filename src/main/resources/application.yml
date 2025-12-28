@@ -28,6 +28,7 @@ github:
 
 aws:
   region: us-east-1
+  profile: ${AWS_PROFILE:}
   control-plane-account-id: ${AWS_ACCOUNT_ID}
 
 jwt:

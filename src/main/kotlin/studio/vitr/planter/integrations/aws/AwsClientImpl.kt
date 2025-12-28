@@ -1,7 +1,9 @@
 package studio.vitr.planter.integrations.aws
 
 import org.springframework.stereotype.Component
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.ec2.Ec2Client
 import software.amazon.awssdk.services.ec2.model.Filter
@@ -25,9 +27,14 @@ class AwsClientImpl(
 
     private val stsClient by lazy { StsClient.builder()
         .region(region)
-        .credentialsProvider(DefaultCredentialsProvider.create())
+        .credentialsProvider(baseCredentialsProvider())
         .build()
     }
+
+    private fun baseCredentialsProvider(): AwsCredentialsProvider = awsConfig.profile
+        ?.takeIf { it.isNotBlank() }
+        ?.let { ProfileCredentialsProvider.create(it) }
+        ?: DefaultCredentialsProvider.create()
 
     private fun observerCredentialsProvider(observerRoleArn: String) = StsAssumeRoleCredentialsProvider.builder()
         .stsClient(stsClient)
