@@ -1,5 +1,6 @@
 package studio.vitr.planter.controller
 
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.web.servlet.error.ErrorController
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import studio.vitr.planter.errors.ApiException
 
+@Hidden
 @RestController
 class ErrorsController : ErrorController {
 

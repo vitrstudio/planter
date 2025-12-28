@@ -30,6 +30,9 @@ class SecurityConfig(
             .requestMatchers("/health")
             .requestMatchers("/auth/**")
             .requestMatchers("/error")
+            .requestMatchers("/swagger-ui/**")
+            .requestMatchers("/api-docs/**")
+            .requestMatchers("/swagger-ui.html")
         }
         .cors { it.configurationSource(corsConfigurationSource) }
         .csrf { it.disable() }

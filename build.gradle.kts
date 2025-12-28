@@ -37,6 +37,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // API Docs
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    
+    // Security: Force secure version of commons-lang3 (fixes CVE-2025-48924)
+    implementation("org.apache.commons:commons-lang3:3.18.0")
+
     // Postgres
     runtimeOnly("org.postgresql:postgresql")
 
