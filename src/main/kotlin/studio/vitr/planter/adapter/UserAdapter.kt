@@ -10,10 +10,11 @@ import studio.vitr.planter.model.db.User
 @Component
 class UserAdapter {
 
-    fun toUserResponse(u: User, g: GithubUser) = UserResponse(
+    fun toUserResponse(u: User, g: GithubUser, isAwsAccountReady: Boolean) = UserResponse(
         id = u.id ?: throw MissingExpectedParameter(USER_ID),
         githubUserId = u.githubAccountId,
         awsAccountId = u.awsAccountId,
+        awsAccountEnabled = isAwsAccountReady,
         name = g.username,
         avatarUrl = g.avatarUrl,
         createdAt = u.createdAt

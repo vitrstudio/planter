@@ -48,6 +48,7 @@ dependencies {
 
     // AWS
     implementation(platform("software.amazon.awssdk:bom:2.25.0"))
+    implementation("software.amazon.awssdk:iam")
     implementation("software.amazon.awssdk:ec2")
     implementation("software.amazon.awssdk:rds")
     implementation("software.amazon.awssdk:s3")

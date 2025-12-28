@@ -25,7 +25,8 @@ class UserController(
     fun getUser(@PathVariable userId: UUID): UserResponse {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
         val githubUser = githubUserService.get(user.githubAccountId) ?: throw NotFound(GITHUB_USER, userId.toString())
-        return userAdapter.toUserResponse(user, githubUser)
+        val isAwsAccountReady = awsService.isAwsAccountReady(githubUser.username)
+        return userAdapter.toUserResponse(user, githubUser, isAwsAccountReady)
     }
 
     @PostMapping("/{userId}/aws")

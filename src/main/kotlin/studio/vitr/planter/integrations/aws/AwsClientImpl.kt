@@ -8,6 +8,7 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.ec2.Ec2Client
 import software.amazon.awssdk.services.ec2.model.Filter
 import software.amazon.awssdk.services.ec2.model.InstanceStateName.RUNNING
+import software.amazon.awssdk.services.iam.IamClient
 import software.amazon.awssdk.services.rds.RdsClient
 import software.amazon.awssdk.services.rds.model.DbInstanceNotFoundException
 import software.amazon.awssdk.services.s3.S3Client
@@ -46,6 +47,13 @@ class AwsClientImpl(
         .roleSessionName("vitruviux-observer")
         .build()
 
+    private val iamClient by lazy {
+        IamClient.builder()
+            .region(region)
+            .credentialsProvider(baseCredentialsProvider())
+            .build()
+    }
+
     private fun ec2Client(observerRoleArn: String) = Ec2Client.builder()
         .credentialsProvider(observerCredentialsProvider(observerRoleArn))
         .region(region)
@@ -61,16 +69,20 @@ class AwsClientImpl(
         .region(region)
         .build()
 
-    private fun getObserverRole(username: String) = "arn:aws:iam::${awsConfig.controlPlaneAccountId}:role/VitruviuxObserverRole-$username"
+    private fun getObserverRoleArn(username: String) = "arn:aws:iam::${awsConfig.controlPlaneAccountId}:role/VitruviuxObserverRole-$username"
 
-    override fun isEc2InstanceRunning(instanceName: String, username: String) = ec2Client(getObserverRole(username))
+    private fun getProvisioningRole(username: String) = "VitruviuxProvisioningRole-$username"
+
+    override fun isAwsAccountReady(username: String) = observerRoleAssumable(username) && provisioningRoleExists(username)
+
+    override fun isEc2InstanceRunning(instanceName: String, username: String) = ec2Client(getObserverRoleArn(username))
         .describeInstances { it.filters(nameFilter(instanceName)) }
         .reservations()
         .flatMap { it.instances() }
         .any { it.state().name() == RUNNING }
 
     override fun isRdsInstanceAvailable(instanceName: String, username: String) = try {
-        val observerRoleArn = getObserverRole(username)
+        val observerRoleArn = getObserverRoleArn(username)
         rdsClient(observerRoleArn).describeDBInstances { it.dbInstanceIdentifier(instanceName) }
             .dbInstances()
             .any { it.dbInstanceStatus().equals("available", ignoreCase = true) }
@@ -79,7 +91,7 @@ class AwsClientImpl(
     }
 
     override fun doesBucketExist(instanceName: String, username: String) = try {
-        val observerRoleArn = getObserverRole(username)
+        val observerRoleArn = getObserverRoleArn(username)
         s3Client(observerRoleArn).headBucket { it.bucket(instanceName) }
         true
     } catch (ex: NoSuchBucketException) {
@@ -89,6 +101,29 @@ class AwsClientImpl(
             ?.let { return false }
             ?: throw ex
     }
+
+    private fun observerRoleAssumable(username: String): Boolean =
+        try {
+            stsClient.assumeRole(
+                AssumeRoleRequest.builder()
+                    .roleArn(getObserverRoleArn(username))
+                    .roleSessionName("vitruviux-validation")
+                    .build()
+            )
+            true
+        } catch (ex: Exception) {
+            false
+        }
+
+    private fun provisioningRoleExists(username: String): Boolean =
+        try {
+            iamClient.getRole {
+                it.roleName(getProvisioningRole(username))
+            }
+            true
+        } catch (ex: Exception) {
+            false
+        }
 
     private fun nameFilter(name: String) = Filter.builder()
         .name("tag:Name")

@@ -2,12 +2,16 @@ package studio.vitr.planter.auth
 
 import org.springframework.stereotype.Service
 import studio.vitr.planter.config.AwsConfig
+import studio.vitr.planter.integrations.aws.AwsClient
 import studio.vitr.planter.model.db.GithubUser
 
 @Service
 class AwsServiceImpl(
-    private val awsConfig: AwsConfig
+    private val awsConfig: AwsConfig,
+    private val awsClient: AwsClient,
 ) : AwsService {
+
+    override fun isAwsAccountReady(username: String) = awsClient.isAwsAccountReady(username)
 
     override fun getAwsAccountSetupUrl(user: GithubUser) = buildString {
         append("https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate")
