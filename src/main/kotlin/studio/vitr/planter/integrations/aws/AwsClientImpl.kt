@@ -61,18 +61,21 @@ class AwsClientImpl(
         .region(region)
         .build()
 
-    private fun getObserverRoleArn(username: String) = "arn:aws:iam::${awsConfig.controlPlaneAccountId}:role/VitruviuxObserverRole-$username"
+    private fun getObserverRoleArn(username: String, awsAccountId: String) = "arn:aws:iam::$awsAccountId:role/VitruviuxObserverRole-$username"
 
-    override fun isAwsAccountReady(username: String) = observerRoleAssumable(username)
+    override fun isAwsAccountReady(username: String, awsAccountId: String) = observerRoleAssumable(username, awsAccountId)
 
-    override fun isEc2InstanceRunning(instanceName: String, username: String) = ec2Client(getObserverRoleArn(username))
+    override fun isEc2InstanceRunning(instanceName: String, username: String, awsAccountId: String) = ec2Client(getObserverRoleArn(
+        username,
+        awsAccountId
+    ))
         .describeInstances { it.filters(nameFilter(instanceName)) }
         .reservations()
         .flatMap { it.instances() }
         .any { it.state().name() == RUNNING }
 
-    override fun isRdsInstanceAvailable(instanceName: String, username: String) = try {
-        val observerRoleArn = getObserverRoleArn(username)
+    override fun isRdsInstanceAvailable(instanceName: String, username: String, awsAccountId: String) = try {
+        val observerRoleArn = getObserverRoleArn(username, awsAccountId)
         rdsClient(observerRoleArn).describeDBInstances { it.dbInstanceIdentifier(instanceName) }
             .dbInstances()
             .any { it.dbInstanceStatus().equals("available", ignoreCase = true) }
@@ -80,8 +83,8 @@ class AwsClientImpl(
         false
     }
 
-    override fun doesBucketExist(instanceName: String, username: String) = try {
-        val observerRoleArn = getObserverRoleArn(username)
+    override fun doesBucketExist(instanceName: String, username: String, awsAccountId: String) = try {
+        val observerRoleArn = getObserverRoleArn(username, awsAccountId)
         s3Client(observerRoleArn).headBucket { it.bucket(instanceName) }
         true
     } catch (ex: NoSuchBucketException) {
@@ -92,11 +95,11 @@ class AwsClientImpl(
             ?: throw ex
     }
 
-    private fun observerRoleAssumable(username: String): Boolean =
+    private fun observerRoleAssumable(username: String, accountId: String): Boolean =
         try {
             stsClient.assumeRole(
                 AssumeRoleRequest.builder()
-                    .roleArn(getObserverRoleArn(username))
+                    .roleArn(getObserverRoleArn(username, accountId))
                     .roleSessionName("vitruviux-validation")
                     .build()
             )

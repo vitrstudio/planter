@@ -34,7 +34,7 @@ class ProjectService(
         return githubUser
             ?.let { githubClient.getUserRepos("$BEARER ${it.accessToken}") }
             ?.filter { it.topics.contains("vitruviux") }
-            ?.map { Project(it, getInfra(it, githubUser)) }
+            ?.map { Project(it, getInfra(it, githubUser, user.awsAccountId)) }
             ?: emptyList()
     }
 
@@ -53,7 +53,7 @@ class ProjectService(
         githubClient.deleteRepo()
     }
 
-    private fun getInfra(repo: GithubRepo, githubUser: GithubUser): AwsInfra {
+    private fun getInfra(repo: GithubRepo, githubUser: GithubUser, awsAccountId: String?): AwsInfra {
         val projectId = getProjectId(repo.topics)
         val username = githubUser.username
         val apiName = "${repo.name}-api"
@@ -61,9 +61,9 @@ class ProjectService(
         val bucketName = "${repo.name}-app-$projectId"
 
         return AwsInfra(
-            isApiRunning = awsClient.isEc2InstanceRunning(apiName, username),
-            isDatabaseRunning = awsClient.isRdsInstanceAvailable(dbName, username),
-            isApplicationBucketCreated =  awsClient.doesBucketExist(bucketName, username)
+            isApiRunning = awsAccountId?.let { awsClient.isEc2InstanceRunning(apiName, username, it) } ?: false,
+            isDatabaseRunning = awsAccountId?.let {awsClient.isRdsInstanceAvailable(dbName, username, it) } ?: false,
+            isApplicationBucketCreated =  awsAccountId?.let {awsClient.doesBucketExist(bucketName, username, it) } ?: false
         )
     }
 

@@ -11,7 +11,7 @@ class AwsServiceImpl(
     private val awsClient: AwsClient,
 ) : AwsService {
 
-    override fun isAwsAccountReady(username: String) = awsClient.isAwsAccountReady(username)
+    override fun isAwsAccountReady(username: String, awsAccountId: String) = awsClient.isAwsAccountReady(username, awsAccountId)
 
     override fun getAwsAccountSetupUrl(user: GithubUser) = buildString {
         append("https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate")

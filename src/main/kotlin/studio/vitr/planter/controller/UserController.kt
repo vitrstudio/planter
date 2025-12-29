@@ -25,7 +25,10 @@ class UserController(
     fun getUser(@PathVariable userId: UUID): UserResponse {
         val user = userService.get(userId) ?: throw NotFound(USER, userId.toString())
         val githubUser = githubUserService.get(user.githubAccountId) ?: throw NotFound(GITHUB_USER, userId.toString())
-        val isAwsAccountReady = awsService.isAwsAccountReady(githubUser.username)
+        val isAwsAccountReady = user.awsAccountId
+            ?.let { awsService.isAwsAccountReady(githubUser.username, it) }
+            ?: false
+
         return userAdapter.toUserResponse(user, githubUser, isAwsAccountReady)
     }
 
