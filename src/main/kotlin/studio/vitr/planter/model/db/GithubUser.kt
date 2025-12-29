@@ -9,7 +9,7 @@ data class GithubUser(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID?,
     val accountId: Long,
     val username: String,
-    val email: String,
+    val email: String?,
     val avatarUrl: String,
     val scope: String?,
     val accessToken: String,
