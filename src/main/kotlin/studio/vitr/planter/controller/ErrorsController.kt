@@ -1,4 +1,4 @@
-package studio.vitr.planter.controller
+package studio.vitr.vitruviux.controller
 
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import studio.vitr.planter.errors.ApiException
+import studio.vitr.vitruviux.errors.ApiException
 
 @Hidden
 @RestController

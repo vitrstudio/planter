@@ -1,17 +1,17 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.adapter.GithubAdapter
-import studio.vitr.planter.config.GithubConfig
-import studio.vitr.planter.constants.Constants.BEARER
-import studio.vitr.planter.constants.Properties.USER_ID
-import studio.vitr.planter.constants.Standards.UTF_8
-import studio.vitr.planter.errors.MissingExpectedParameter
-import studio.vitr.planter.integrations.github.GithubClient
-import studio.vitr.planter.integrations.github.GithubOauthClient
-import studio.vitr.planter.model.dto.Session
-import studio.vitr.planter.service.GithubUserService
-import studio.vitr.planter.service.UserService
+import studio.vitr.vitruviux.adapter.GithubAdapter
+import studio.vitr.vitruviux.config.GithubConfig
+import studio.vitr.vitruviux.constants.Constants.BEARER
+import studio.vitr.vitruviux.constants.Properties.USER_ID
+import studio.vitr.vitruviux.constants.Standards.UTF_8
+import studio.vitr.vitruviux.errors.MissingExpectedParameter
+import studio.vitr.vitruviux.integrations.github.GithubClient
+import studio.vitr.vitruviux.integrations.github.GithubOauthClient
+import studio.vitr.vitruviux.model.dto.Session
+import studio.vitr.vitruviux.service.GithubUserService
+import studio.vitr.vitruviux.service.UserService
 import java.net.URLEncoder
 import java.util.*
 

@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.dto
+package studio.vitr.vitruviux.model.dto
 
 data class Session(
     val userId: String,

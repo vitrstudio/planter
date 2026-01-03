@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.integrations
+package studio.vitr.vitruviux.model.integrations
 
 class AwsInfra(
     val isApiRunning: Boolean,

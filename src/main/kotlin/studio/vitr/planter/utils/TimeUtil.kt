@@ -1,4 +1,4 @@
-package studio.vitr.planter.utils
+package studio.vitr.vitruviux.utils
 
 import java.time.Instant
 import java.util.*

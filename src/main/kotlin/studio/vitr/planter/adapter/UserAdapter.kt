@@ -1,11 +1,11 @@
-package studio.vitr.planter.adapter
+package studio.vitr.vitruviux.adapter
 
 import org.springframework.stereotype.Component
-import studio.vitr.planter.constants.Properties.USER_ID
-import studio.vitr.planter.errors.MissingExpectedParameter
-import studio.vitr.planter.model.api.UserResponse
-import studio.vitr.planter.model.db.GithubUser
-import studio.vitr.planter.model.db.User
+import studio.vitr.vitruviux.constants.Properties.USER_ID
+import studio.vitr.vitruviux.errors.MissingExpectedParameter
+import studio.vitr.vitruviux.model.api.UserResponse
+import studio.vitr.vitruviux.model.db.GithubUser
+import studio.vitr.vitruviux.model.db.User
 
 @Component
 class UserAdapter {

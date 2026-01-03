@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.api
+package studio.vitr.vitruviux.model.api
 
 data class SessionResponse(
     val userId: String,

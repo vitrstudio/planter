@@ -1,9 +1,9 @@
-package studio.vitr.planter.controller
+package studio.vitr.vitruviux.controller
 
 import org.springframework.web.bind.annotation.*
-import studio.vitr.planter.adapter.ProjectAdapter
-import studio.vitr.planter.model.api.ProjectRequest
-import studio.vitr.planter.service.ProjectService
+import studio.vitr.vitruviux.adapter.ProjectAdapter
+import studio.vitr.vitruviux.model.api.ProjectRequest
+import studio.vitr.vitruviux.service.ProjectService
 import java.util.*
 
 @RestController

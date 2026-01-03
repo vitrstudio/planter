@@ -1,18 +1,18 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service
-import studio.vitr.planter.config.JwtConfig
-import studio.vitr.planter.constants.Claims.EMAIL
-import studio.vitr.planter.constants.Claims.TYPE
-import studio.vitr.planter.model.SessionToken
-import studio.vitr.planter.model.enums.TokenType
-import studio.vitr.planter.model.enums.TokenType.ACCESS
-import studio.vitr.planter.model.enums.TokenType.REFRESH
-import studio.vitr.planter.utils.TimeUtil
-import studio.vitr.planter.utils.TimeUtil.Companion.now
+import studio.vitr.vitruviux.config.JwtConfig
+import studio.vitr.vitruviux.constants.Claims.EMAIL
+import studio.vitr.vitruviux.constants.Claims.TYPE
+import studio.vitr.vitruviux.model.SessionToken
+import studio.vitr.vitruviux.model.enums.TokenType
+import studio.vitr.vitruviux.model.enums.TokenType.ACCESS
+import studio.vitr.vitruviux.model.enums.TokenType.REFRESH
+import studio.vitr.vitruviux.utils.TimeUtil
+import studio.vitr.vitruviux.utils.TimeUtil.Companion.now
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 

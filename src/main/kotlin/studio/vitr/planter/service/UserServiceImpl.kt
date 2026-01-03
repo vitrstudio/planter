@@ -1,12 +1,12 @@
-package studio.vitr.planter.service
+package studio.vitr.vitruviux.service
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.constants.Properties.USER
-import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.db.User
-import studio.vitr.planter.model.integrations.GithubAccount
-import studio.vitr.planter.repository.UserRepository
-import studio.vitr.planter.utils.TimeUtil
+import studio.vitr.vitruviux.constants.Properties.USER
+import studio.vitr.vitruviux.errors.NotFound
+import studio.vitr.vitruviux.model.db.User
+import studio.vitr.vitruviux.model.integrations.GithubAccount
+import studio.vitr.vitruviux.repository.UserRepository
+import studio.vitr.vitruviux.utils.TimeUtil
 import java.util.*
 
 @Service

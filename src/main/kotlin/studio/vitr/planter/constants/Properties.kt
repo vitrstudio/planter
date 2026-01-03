@@ -1,4 +1,4 @@
-package studio.vitr.planter.constants
+package studio.vitr.vitruviux.constants
 
 object Properties {
     const val ID = "id"

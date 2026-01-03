@@ -1,6 +1,6 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
-import studio.vitr.planter.model.db.GithubUser
+import studio.vitr.vitruviux.model.db.GithubUser
 
 interface AwsService {
     fun isAwsAccountReady(username: String, awsAccountId: String): Boolean

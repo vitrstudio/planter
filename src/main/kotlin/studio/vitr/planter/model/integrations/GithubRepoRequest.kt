@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.integrations
+package studio.vitr.vitruviux.model.integrations
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.PropertyNamingStrategies

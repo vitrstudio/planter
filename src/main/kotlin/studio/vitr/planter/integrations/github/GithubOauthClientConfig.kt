@@ -1,4 +1,4 @@
-package studio.vitr.planter.integrations.github
+package studio.vitr.vitruviux.integrations.github
 
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean

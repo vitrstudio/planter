@@ -1,7 +1,7 @@
-package studio.vitr.planter.model
+package studio.vitr.vitruviux.model
 
-import studio.vitr.planter.model.enums.TokenType
-import studio.vitr.planter.utils.TimeUtil
+import studio.vitr.vitruviux.model.enums.TokenType
+import studio.vitr.vitruviux.utils.TimeUtil
 
 class SessionToken(
     val type: TokenType,

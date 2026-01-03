@@ -1,9 +1,9 @@
-package studio.vitr.planter.repository
+package studio.vitr.vitruviux.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import studio.vitr.planter.model.db.GithubUser
+import studio.vitr.vitruviux.model.db.GithubUser
 import java.util.*
 
 @Repository

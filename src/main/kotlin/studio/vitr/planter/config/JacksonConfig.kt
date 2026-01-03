@@ -1,4 +1,4 @@
-package studio.vitr.planter.config
+package studio.vitr.vitruviux.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE

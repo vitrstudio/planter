@@ -1,4 +1,4 @@
-package studio.vitr.planter.config
+package studio.vitr.vitruviux.config
 
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
@@ -21,10 +21,10 @@ class OpenApiConfig {
             .components(components())
 
     private fun info() = Info()
-        .title("Planter API")
-        .description("API documentation for Planter application")
+        .title("Vitruviux API")
+        .description("API documentation for Vitruviux application")
         .version("2.0.1")
-        .contact(Contact().name("Planter Team"))
+        .contact(Contact().name("Vitruviux Team"))
 
     private fun components() = Components().addSecuritySchemes(securitySchemeName, securityScheme())
 

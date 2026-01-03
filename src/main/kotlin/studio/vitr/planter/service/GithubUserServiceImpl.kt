@@ -1,12 +1,12 @@
-package studio.vitr.planter.service
+package studio.vitr.vitruviux.service
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.constants.Properties.GITHUB_USER
-import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.db.GithubUser
-import studio.vitr.planter.model.integrations.GithubAccount
-import studio.vitr.planter.model.integrations.GithubTokenResponse
-import studio.vitr.planter.repository.GithubUserRepository
+import studio.vitr.vitruviux.constants.Properties.GITHUB_USER
+import studio.vitr.vitruviux.errors.NotFound
+import studio.vitr.vitruviux.model.db.GithubUser
+import studio.vitr.vitruviux.model.integrations.GithubAccount
+import studio.vitr.vitruviux.model.integrations.GithubTokenResponse
+import studio.vitr.vitruviux.repository.GithubUserRepository
 
 @Service
 class GithubUserServiceImpl(private val repository: GithubUserRepository): GithubUserService {

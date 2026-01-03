@@ -1,4 +1,4 @@
-package studio.vitr.planter.config
+package studio.vitr.vitruviux.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,10 +9,10 @@ import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfigurationSource
-import studio.vitr.planter.auth.AuthService
-import studio.vitr.planter.auth.JwtAuthenticationFilter
-import studio.vitr.planter.service.GithubUserService
-import studio.vitr.planter.service.UserService
+import studio.vitr.vitruviux.auth.AuthService
+import studio.vitr.vitruviux.auth.JwtAuthenticationFilter
+import studio.vitr.vitruviux.service.GithubUserService
+import studio.vitr.vitruviux.service.UserService
 
 @Configuration
 @EnableWebSecurity

@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.db
+package studio.vitr.vitruviux.model.db
 
 import jakarta.persistence.*
 import java.util.*

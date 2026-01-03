@@ -1,11 +1,11 @@
-package studio.vitr.planter
+package studio.vitr.vitruviux
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PlanterApplication
+class VitruviuxApplication
 
 fun main(args: Array<String>) {
-    runApplication<PlanterApplication>(*args)
+    runApplication<VitruviuxApplication>(*args)
 }

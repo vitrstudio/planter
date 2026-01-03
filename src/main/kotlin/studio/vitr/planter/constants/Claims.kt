@@ -1,4 +1,4 @@
-package studio.vitr.planter.constants
+package studio.vitr.vitruviux.constants
 
 object Claims {
     const val EMAIL = "email"

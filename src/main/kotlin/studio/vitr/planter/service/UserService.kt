@@ -1,7 +1,7 @@
-package studio.vitr.planter.service
+package studio.vitr.vitruviux.service
 
-import studio.vitr.planter.model.db.User
-import studio.vitr.planter.model.integrations.GithubAccount
+import studio.vitr.vitruviux.model.db.User
+import studio.vitr.vitruviux.model.integrations.GithubAccount
 import java.util.*
 
 interface UserService {

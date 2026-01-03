@@ -1,4 +1,4 @@
-package studio.vitr.planter.integrations.aws
+package studio.vitr.vitruviux.integrations.aws
 
 interface AwsClient {
     fun isAwsAccountReady(username: String, awsAccountId: String): Boolean

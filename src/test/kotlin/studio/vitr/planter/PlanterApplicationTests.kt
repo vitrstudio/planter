@@ -1,9 +1,9 @@
-package studio.vitr.planter
+package studio.vitr.vitruviux
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
-class PlanterApplicationTests {
+class VitruviuxApplicationTests {
 
     @Test
     fun contextLoads() {

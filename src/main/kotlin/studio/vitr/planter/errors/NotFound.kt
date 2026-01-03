@@ -1,4 +1,4 @@
-package studio.vitr.planter.errors
+package studio.vitr.vitruviux.errors
 
 import org.springframework.http.HttpStatus.NOT_FOUND
 

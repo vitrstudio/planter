@@ -1,8 +1,8 @@
-package studio.vitr.planter.adapter
+package studio.vitr.vitruviux.adapter
 
 import org.springframework.stereotype.Component
-import studio.vitr.planter.config.GithubConfig
-import studio.vitr.planter.model.integrations.GithubTokenRequest
+import studio.vitr.vitruviux.config.GithubConfig
+import studio.vitr.vitruviux.model.integrations.GithubTokenRequest
 
 @Component
 class GithubAdapter {

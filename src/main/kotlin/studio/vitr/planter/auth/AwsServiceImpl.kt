@@ -1,9 +1,9 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.config.AwsConfig
-import studio.vitr.planter.integrations.aws.AwsClient
-import studio.vitr.planter.model.db.GithubUser
+import studio.vitr.vitruviux.config.AwsConfig
+import studio.vitr.vitruviux.integrations.aws.AwsClient
+import studio.vitr.vitruviux.model.db.GithubUser
 
 @Service
 class AwsServiceImpl(

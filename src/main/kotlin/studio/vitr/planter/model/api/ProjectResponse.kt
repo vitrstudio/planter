@@ -1,6 +1,6 @@
-package studio.vitr.planter.model.api
+package studio.vitr.vitruviux.model.api
 
-import studio.vitr.planter.model.enums.ProjectType
+import studio.vitr.vitruviux.model.enums.ProjectType
 
 class ProjectResponse(
     val githubRepositoryId: String,

@@ -1,6 +1,6 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
-import studio.vitr.planter.model.SessionToken
+import studio.vitr.vitruviux.model.SessionToken
 import java.util.*
 
 interface JwtService {

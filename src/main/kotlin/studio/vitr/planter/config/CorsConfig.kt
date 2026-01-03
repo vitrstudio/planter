@@ -1,4 +1,4 @@
-package studio.vitr.planter.config
+package studio.vitr.vitruviux.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

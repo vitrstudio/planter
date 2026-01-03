@@ -1,7 +1,7 @@
-package studio.vitr.planter.model.enums
+package studio.vitr.vitruviux.model.enums
 
-import studio.vitr.planter.constants.Properties.TOKEN_TYPE
-import studio.vitr.planter.errors.InvalidEnumValue
+import studio.vitr.vitruviux.constants.Properties.TOKEN_TYPE
+import studio.vitr.vitruviux.errors.InvalidEnumValue
 
 enum class TokenType {
     ACCESS,

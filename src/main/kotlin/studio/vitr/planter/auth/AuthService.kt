@@ -1,6 +1,6 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
-import studio.vitr.planter.model.dto.Session
+import studio.vitr.vitruviux.model.dto.Session
 import java.util.*
 
 interface AuthService {

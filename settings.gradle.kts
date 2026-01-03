@@ -1,1 +1,1 @@
-rootProject.name = "planter"
+rootProject.name = "vitruviux"

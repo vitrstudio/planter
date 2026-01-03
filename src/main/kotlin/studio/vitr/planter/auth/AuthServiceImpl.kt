@@ -1,19 +1,19 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.adapter.AuthAdapter
-import studio.vitr.planter.constants.Properties.ACCESS_TOKEN
-import studio.vitr.planter.constants.Properties.REFRESH_TOKEN
-import studio.vitr.planter.constants.Properties.TOKEN_TYPE
-import studio.vitr.planter.constants.Properties.USER
-import studio.vitr.planter.constants.Properties.USER_ID
-import studio.vitr.planter.errors.ExpiredToken
-import studio.vitr.planter.errors.InvalidParameter
-import studio.vitr.planter.errors.InvalidPayloadAttribute
-import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.dto.Session
-import studio.vitr.planter.model.enums.TokenType.ACCESS
-import studio.vitr.planter.service.UserService
+import studio.vitr.vitruviux.adapter.AuthAdapter
+import studio.vitr.vitruviux.constants.Properties.ACCESS_TOKEN
+import studio.vitr.vitruviux.constants.Properties.REFRESH_TOKEN
+import studio.vitr.vitruviux.constants.Properties.TOKEN_TYPE
+import studio.vitr.vitruviux.constants.Properties.USER
+import studio.vitr.vitruviux.constants.Properties.USER_ID
+import studio.vitr.vitruviux.errors.ExpiredToken
+import studio.vitr.vitruviux.errors.InvalidParameter
+import studio.vitr.vitruviux.errors.InvalidPayloadAttribute
+import studio.vitr.vitruviux.errors.NotFound
+import studio.vitr.vitruviux.model.dto.Session
+import studio.vitr.vitruviux.model.enums.TokenType.ACCESS
+import studio.vitr.vitruviux.service.UserService
 import java.util.*
 
 @Service

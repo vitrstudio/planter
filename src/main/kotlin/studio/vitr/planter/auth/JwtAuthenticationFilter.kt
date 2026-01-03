@@ -1,4 +1,4 @@
-package studio.vitr.planter.auth
+package studio.vitr.vitruviux.auth
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -7,14 +7,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.filter.OncePerRequestFilter
-import studio.vitr.planter.service.UserService
-import studio.vitr.planter.constants.Authorities.USER
-import studio.vitr.planter.constants.Constants.BEARER
-import studio.vitr.planter.constants.Headers.AUTHORIZATION
-import studio.vitr.planter.constants.Properties.ACCESS_TOKEN
-import studio.vitr.planter.errors.InvalidParameter
-import studio.vitr.planter.model.db.GithubUser
-import studio.vitr.planter.service.GithubUserService
+import studio.vitr.vitruviux.service.UserService
+import studio.vitr.vitruviux.constants.Authorities.USER
+import studio.vitr.vitruviux.constants.Constants.BEARER
+import studio.vitr.vitruviux.constants.Headers.AUTHORIZATION
+import studio.vitr.vitruviux.constants.Properties.ACCESS_TOKEN
+import studio.vitr.vitruviux.errors.InvalidParameter
+import studio.vitr.vitruviux.model.db.GithubUser
+import studio.vitr.vitruviux.service.GithubUserService
 import java.util.UUID
 
 class JwtAuthenticationFilter(

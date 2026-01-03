@@ -1,4 +1,4 @@
-package studio.vitr.planter.integrations.aws
+package studio.vitr.vitruviux.integrations.aws
 
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
@@ -16,7 +16,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception
 import software.amazon.awssdk.services.sts.StsClient
 import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
 import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
-import studio.vitr.planter.config.AwsConfig
+import studio.vitr.vitruviux.config.AwsConfig
 
 @Component
 class AwsClientImpl(

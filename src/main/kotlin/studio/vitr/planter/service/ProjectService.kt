@@ -1,19 +1,19 @@
-package studio.vitr.planter.service
+package studio.vitr.vitruviux.service
 
 import org.springframework.stereotype.Service
-import studio.vitr.planter.constants.Constants.BEARER
-import studio.vitr.planter.constants.Properties.GITHUB_USER
-import studio.vitr.planter.constants.Properties.USER
-import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.integrations.aws.AwsClient
-import studio.vitr.planter.integrations.github.GithubClient
-import studio.vitr.planter.model.Project
-import studio.vitr.planter.model.api.ProjectRequest
-import studio.vitr.planter.model.db.GithubUser
-import studio.vitr.planter.model.integrations.AwsInfra
-import studio.vitr.planter.model.integrations.GithubRepo
-import studio.vitr.planter.model.integrations.GithubRepoRequest
-import studio.vitr.planter.model.integrations.GithubRepoTopicsRequest
+import studio.vitr.vitruviux.constants.Constants.BEARER
+import studio.vitr.vitruviux.constants.Properties.GITHUB_USER
+import studio.vitr.vitruviux.constants.Properties.USER
+import studio.vitr.vitruviux.errors.NotFound
+import studio.vitr.vitruviux.integrations.aws.AwsClient
+import studio.vitr.vitruviux.integrations.github.GithubClient
+import studio.vitr.vitruviux.model.Project
+import studio.vitr.vitruviux.model.api.ProjectRequest
+import studio.vitr.vitruviux.model.db.GithubUser
+import studio.vitr.vitruviux.model.integrations.AwsInfra
+import studio.vitr.vitruviux.model.integrations.GithubRepo
+import studio.vitr.vitruviux.model.integrations.GithubRepoRequest
+import studio.vitr.vitruviux.model.integrations.GithubRepoTopicsRequest
 import java.util.*
 
 @Service

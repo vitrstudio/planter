@@ -1,11 +1,11 @@
-package studio.vitr.planter.controller
+package studio.vitr.vitruviux.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import studio.vitr.planter.adapter.AuthAdapter
-import studio.vitr.planter.auth.GithubAuthService
-import studio.vitr.planter.model.api.GithubAuthUrlResponse
-import studio.vitr.planter.model.api.SigninRequest
+import studio.vitr.vitruviux.adapter.AuthAdapter
+import studio.vitr.vitruviux.auth.GithubAuthService
+import studio.vitr.vitruviux.model.api.GithubAuthUrlResponse
+import studio.vitr.vitruviux.model.api.SigninRequest
 
 @RestController
 @RequestMapping("/auth/github")

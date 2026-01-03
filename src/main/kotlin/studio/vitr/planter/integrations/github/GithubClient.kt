@@ -1,4 +1,4 @@
-package studio.vitr.planter.integrations.github
+package studio.vitr.vitruviux.integrations.github
 
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.web.bind.annotation.PathVariable
@@ -8,10 +8,10 @@ import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
 import org.springframework.web.service.annotation.PutExchange
-import studio.vitr.planter.model.integrations.GithubRepo
-import studio.vitr.planter.model.integrations.GithubRepoRequest
-import studio.vitr.planter.model.integrations.GithubRepoTopicsRequest
-import studio.vitr.planter.model.integrations.GithubAccount
+import studio.vitr.vitruviux.model.integrations.GithubRepo
+import studio.vitr.vitruviux.model.integrations.GithubRepoRequest
+import studio.vitr.vitruviux.model.integrations.GithubRepoTopicsRequest
+import studio.vitr.vitruviux.model.integrations.GithubAccount
 
 @HttpExchange(accept = [APPLICATION_JSON_VALUE])
 interface GithubClient {

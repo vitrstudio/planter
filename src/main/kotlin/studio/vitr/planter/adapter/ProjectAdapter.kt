@@ -1,12 +1,12 @@
-package studio.vitr.planter.adapter
+package studio.vitr.vitruviux.adapter
 
 import org.springframework.stereotype.Component
-import studio.vitr.planter.model.api.InfraResponse
-import studio.vitr.planter.model.api.ProjectResponse
-import studio.vitr.planter.model.enums.ProjectType
-import studio.vitr.planter.model.integrations.AwsInfra
-import studio.vitr.planter.model.Project
-import studio.vitr.planter.utils.TimeUtil
+import studio.vitr.vitruviux.model.api.InfraResponse
+import studio.vitr.vitruviux.model.api.ProjectResponse
+import studio.vitr.vitruviux.model.enums.ProjectType
+import studio.vitr.vitruviux.model.integrations.AwsInfra
+import studio.vitr.vitruviux.model.Project
+import studio.vitr.vitruviux.utils.TimeUtil
 
 @Component
 class ProjectAdapter {

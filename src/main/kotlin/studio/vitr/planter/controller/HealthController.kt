@@ -1,4 +1,4 @@
-package studio.vitr.planter.controller
+package studio.vitr.vitruviux.controller
 
 import io.swagger.v3.oas.annotations.Hidden
 import org.springframework.beans.factory.annotation.Value

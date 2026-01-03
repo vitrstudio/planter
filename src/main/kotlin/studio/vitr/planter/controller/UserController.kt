@@ -1,15 +1,15 @@
-package studio.vitr.planter.controller
+package studio.vitr.vitruviux.controller
 
 import org.springframework.web.bind.annotation.*
-import studio.vitr.planter.adapter.UserAdapter
-import studio.vitr.planter.auth.AwsService
-import studio.vitr.planter.constants.Properties.GITHUB_USER
-import studio.vitr.planter.constants.Properties.USER
-import studio.vitr.planter.errors.NotFound
-import studio.vitr.planter.model.api.AwsAccountSetupRequest
-import studio.vitr.planter.model.api.UserResponse
-import studio.vitr.planter.service.GithubUserService
-import studio.vitr.planter.service.UserService
+import studio.vitr.vitruviux.adapter.UserAdapter
+import studio.vitr.vitruviux.auth.AwsService
+import studio.vitr.vitruviux.constants.Properties.GITHUB_USER
+import studio.vitr.vitruviux.constants.Properties.USER
+import studio.vitr.vitruviux.errors.NotFound
+import studio.vitr.vitruviux.model.api.AwsAccountSetupRequest
+import studio.vitr.vitruviux.model.api.UserResponse
+import studio.vitr.vitruviux.service.GithubUserService
+import studio.vitr.vitruviux.service.UserService
 import java.util.*
 
 @RestController

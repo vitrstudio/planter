@@ -1,4 +1,4 @@
-package studio.vitr.planter.config
+package studio.vitr.vitruviux.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

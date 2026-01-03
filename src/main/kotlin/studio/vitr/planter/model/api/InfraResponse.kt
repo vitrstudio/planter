@@ -1,4 +1,4 @@
-package studio.vitr.planter.model.api
+package studio.vitr.vitruviux.model.api
 
 class InfraResponse(
     val isApiRunning: Boolean,
